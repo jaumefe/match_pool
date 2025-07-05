@@ -48,7 +48,8 @@ func createTables() error {
 			name TEXT NOT NULL,
 			group_name TEXT NOT NULL,
 			value INTEGER NOT NULL,
-			eliminated_at TEXT
+			eliminated_at TEXT,
+			pool_group TEXT,
 		);`,
 
 		`CREATE TABLE IF NOT EXISTS users (
@@ -77,6 +78,7 @@ func createTables() error {
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			name TEXT NOT NULL,
 			team_id INTEGER NOT NULL,
+			position TEXT NOT NULL,
 			FOREIGN KEY (team_id) REFERENCES teams(id)
 		);`,
 

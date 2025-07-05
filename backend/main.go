@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	db "match_pool_back/database"
 	"match_pool_back/routes"
 	"os"
@@ -10,7 +11,8 @@ import (
 )
 
 var optsConfig struct {
-	DB string `short:"d" long:"database" description:"Path to the database file" default:"template/template.db"`
+	DB   string `short:"d" long:"database" description:"Path to the database file" default:"database/template/template.db"`
+	Port string `short:"p" long:"port" description:"Port to run the server on" default:"8080"`
 }
 
 func main() {
@@ -28,5 +30,6 @@ func main() {
 	r := gin.Default()
 	routes.SetupRoutes(r)
 
-	r.Run(":5050") // Start the server on port 5050
+	port := fmt.Sprintf(":%s", optsConfig.Port)
+	r.Run(port) // Start the server on the specified port
 }
