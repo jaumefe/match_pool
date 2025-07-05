@@ -28,7 +28,7 @@ func main() {
 	}
 
 	r := gin.Default()
-	routes.SetupRoutes(r)
+	routes.SetUpRoutes(r)
 
 	port := fmt.Sprintf(":%s", optsConfig.Port)
 	r.Run(port) // Start the server on the specified port

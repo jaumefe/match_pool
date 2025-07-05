@@ -1,10 +1,12 @@
 package routes
 
 import (
+	"match_pool_back/controllers"
+
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRoutes(r *gin.Engine) {
+func SetUpRoutes(r *gin.Engine) {
 	// Define your routes here
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -12,8 +14,6 @@ func SetupRoutes(r *gin.Engine) {
 		})
 	})
 
-	// Add more routes as needed
-	// r.POST("/example", exampleHandler)
-	// r.GET("/users/:id", getUserHandler)
-	// etc.
+	r.GET("/teams", controllers.GetTeams)
+	r.GET("/scorers", controllers.GetScorers)
 }

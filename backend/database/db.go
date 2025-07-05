@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -17,6 +18,7 @@ func InitDB(dataSource string) error {
 
 	// Create tables if they do not exist
 	if err := createTables(); err != nil {
+		fmt.Println("Aquí")
 		return err
 	}
 
@@ -49,7 +51,7 @@ func createTables() error {
 			group_name TEXT NOT NULL,
 			value INTEGER NOT NULL,
 			eliminated_at TEXT,
-			pool_group TEXT,
+			pool_group TEXT
 		);`,
 
 		`CREATE TABLE IF NOT EXISTS users (
@@ -94,6 +96,7 @@ func createTables() error {
 
 	for _, q := range queries {
 		if _, err := DB.Exec(q); err != nil {
+			fmt.Println(q)
 			return err
 		}
 	}
