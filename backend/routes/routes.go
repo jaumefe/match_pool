@@ -15,5 +15,7 @@ func SetUpRoutes(r *gin.Engine) {
 	})
 
 	r.GET("/teams", controllers.GetTeams)
+	r.GET("/teams/:groupName", controllers.GetTeamsByGroup)
 	r.GET("/scorers", controllers.GetScorers)
+	r.GET("/scorers/:groupName/:position", controllers.GetScorersByGroupAndPosition)
 }

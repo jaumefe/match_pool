@@ -3,6 +3,6 @@ package models
 type Scorer struct {
 	ID       int    `json:"id"`
 	Name     string `json:"name"`
-	TeamID   int    `json:"team_id"`
+	Team     string `json:"team"`
 	Position string `json:"position"`
 }
