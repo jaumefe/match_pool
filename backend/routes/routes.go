@@ -2,6 +2,7 @@ package routes
 
 import (
 	"match_pool_back/controllers"
+	"match_pool_back/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,4 +19,7 @@ func SetUpRoutes(r *gin.Engine) {
 	r.GET("/teams/:groupName", controllers.GetTeamsByGroup)
 	r.GET("/scorers", controllers.GetScorers)
 	r.GET("/scorers/:groupName/:position", controllers.GetScorersByGroupAndPosition)
+
+	r.POST("/users", middleware.JWTMiddleware(), controllers.RegisterUser)
+	r.POST("/login", controllers.LoginUser)
 }

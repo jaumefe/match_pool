@@ -16,7 +16,7 @@ func GetScorers(c *gin.Context) {
 		return
 	}
 
-	rows, err := db.DB.Query(SELECT_SCORERS_QUERY)
+	rows, err := db.DB.Query(SCORERS_QUERY)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query scorers"})
 		return
@@ -48,13 +48,13 @@ func GetScorersByGroupAndPosition(c *gin.Context) {
 
 	var rows *sql.Rows
 	if position == "any" {
-		rows, err = db.DB.Query(SELECT_SCORERS_BY_GROUP_QUERY, groupName)
+		rows, err = db.DB.Query(SCORERS_BY_GROUP_QUERY, groupName)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query scorers"})
 			return
 		}
 	} else {
-		rows, err = db.DB.Query(SELECT_SCORERS_BY_GROUP_AND_POSITION_QUERY, groupName, position)
+		rows, err = db.DB.Query(SCORERS_BY_GROUP_AND_POSITION_QUERY, groupName, position)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query scorers"})
 			return

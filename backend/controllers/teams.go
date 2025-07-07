@@ -9,7 +9,7 @@ import (
 )
 
 func GetTeams(c *gin.Context) {
-	rows, err := db.DB.Query(SELECT_TEAMS_QUERY)
+	rows, err := db.DB.Query(TEAMS_QUERY)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query teams"})
 		return
@@ -32,7 +32,7 @@ func GetTeams(c *gin.Context) {
 func GetTeamsByGroup(c *gin.Context) {
 	groupName := c.Param("groupName")
 
-	rows, err := db.DB.Query(SELECT_TEAMS_BY_GROUP_QUERY, groupName)
+	rows, err := db.DB.Query(TEAMS_BY_GROUP_QUERY, groupName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query teams"})
 		return
