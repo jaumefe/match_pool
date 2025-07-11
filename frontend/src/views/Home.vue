@@ -15,6 +15,7 @@ function Login() {
 
 <template>
     <h1>{{ msg }}</h1>
+    <img src="../assets/celebration.svg" alt="Champions Cup" width="300" height="300"/>
     <div class="card">
         <p>
             This is the home page of the Match Pool application.
