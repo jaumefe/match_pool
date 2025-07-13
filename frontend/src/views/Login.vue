@@ -2,19 +2,22 @@
 
 import { ref } from 'vue'
 import { login } from '../services/auth.js'
+import { useRouter } from 'vue-router'
 
 const user = ref('')
 const password = ref('')
 const error = ref('')
+const router = useRouter()
 
 async function submit() {
   error.value = ''
-  const result = await login(user.value, password.value)
-  if (result) {
+  try  {
+    const result = await login(user.value, password.value)
     // Handle successful login
     console.log('Login successful')
-  } else {
-    error.value = 'Login failed. Please try again.'
+    router.push('/pool')
+  } catch (err) {
+    error.value = err.message
   }
 }
 </script>
