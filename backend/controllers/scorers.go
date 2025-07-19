@@ -10,7 +10,7 @@ import (
 )
 
 func GetScorers(c *gin.Context) {
-	_, err := db.DB.Exec("PRAGMA foreign_keys = ON") // Ensure foreign keys are enabled
+	_, err := db.DB.Exec(PRAGMA_FOREIGN_KEYS_ON) // Ensure foreign keys are enabled
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to enable foreign keys"})
 		return
@@ -40,7 +40,7 @@ func GetScorersByGroupAndPosition(c *gin.Context) {
 	groupName := c.Param("groupName")
 	position := c.Param("position")
 
-	_, err := db.DB.Exec("PRAGMA foreign_keys = ON") // Ensure foreign keys are enabled
+	_, err := db.DB.Exec(PRAGMA_FOREIGN_KEYS_ON) // Ensure foreign keys are enabled
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to enable foreign keys"})
 		return

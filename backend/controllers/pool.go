@@ -26,6 +26,22 @@ func SubmitTeamsUser(c *gin.Context) {
 		return
 	}
 
+	if err := checkUniqueTeamsID(input.TeamsID); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	points, err := checkUserTeamsPoints(input.TeamsID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to calculate points: %v", err)})
+		return
+	}
+
+	if points > MAX_POINTS {
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("User points: %d exceed maximum: %d", points, MAX_POINTS)})
+		return
+	}
+
 	for _, teamID := range input.TeamsID {
 		_, err := db.DB.Exec("INSERT INTO user_teams (user_id, team_id) VALUES (?, ?)", input.userID, teamID)
 		if err != nil {
@@ -35,4 +51,33 @@ func SubmitTeamsUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Teams assigned successfully"})
+}
+
+func checkUserTeamsPoints(ids []int) (int, error) {
+	_, err := db.DB.Exec(PRAGMA_FOREIGN_KEYS_ON)
+	if err != nil {
+		return 0, err
+	}
+
+	var totalPoints int
+	for _, id := range ids {
+		var points int
+		row := db.DB.QueryRow(GET_VALUES_BY_TEAM_ID_QUERY, id)
+		if err := row.Scan(&points); err != nil {
+			return 0, err
+		}
+		totalPoints += points
+	}
+	return totalPoints, nil
+}
+
+func checkUniqueTeamsID(teams []int) error {
+	teamSet := make(map[int]struct{})
+	for _, teamID := range teams {
+		if _, exists := teamSet[teamID]; exists {
+			return fmt.Errorf("duplicate team ID found: %d", teamID)
+		}
+		teamSet[teamID] = struct{}{}
+	}
+	return nil
 }
