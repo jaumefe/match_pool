@@ -18,8 +18,6 @@ export async function submitTeams(teams) {
     }
     
     try {
-        console.log(`Submitting teams: ${teams}`)
-
         const response = await axios.post(`${API_URL}/pool/teams`, {'teams_id': teams}, {
             headers: {
                 'Authorization': `Bearer ${token}`
