@@ -44,9 +44,9 @@ const inner = computed({
     <Select
         v-model="inner"  
         :options="teams"
-        optionsLabel="name"
-        placeholder="Selecciona un equipo"
-        class="w-full md:w-14rem"
+        optionLabel="name"
+        placeholder="Selecciona un equip"
+        class="w-full md:w-56"
     />
     <p v-if="error" class="text-red-500 text-xs">{{ error }}</p>
 </template>
