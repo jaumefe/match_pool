@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	db "match_pool_back/database"
+	"match_pool_back/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -80,4 +81,37 @@ func checkUniqueTeamsID(teams []int) error {
 		teamSet[teamID] = struct{}{}
 	}
 	return nil
+}
+
+func GetTeamsByUser(c *gin.Context) {
+	userID, ok := c.Get("user_id")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User ID not found in context"})
+		return
+	}
+
+	_, err := db.DB.Exec(PRAGMA_FOREIGN_KEYS_ON)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	rows, err := db.DB.Query(GET_USER_TEAMS_QUERY, userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer rows.Close()
+
+	var teams []models.Team
+	for rows.Next() {
+		var team models.Team
+		if err := rows.Scan(&team.ID, &team.Name); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		teams = append(teams, team)
+	}
+
+	c.JSON(http.StatusOK, teams)
 }

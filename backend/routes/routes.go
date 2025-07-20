@@ -19,6 +19,7 @@ func SetUpRoutes(r *gin.Engine) {
 	r.GET("/teams/:groupName", controllers.GetTeamsByGroup)
 	r.GET("/scorers", controllers.GetScorers)
 	r.GET("/scorers/:groupName/:position", controllers.GetScorersByGroupAndPosition)
+	r.GET("/pool/teams", middleware.JWTMiddleware(), controllers.GetTeamsByUser)
 
 	r.POST("/users", middleware.JWTMiddleware(), controllers.RegisterUser)
 	r.POST("/login", controllers.LoginUser)

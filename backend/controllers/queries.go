@@ -30,4 +30,10 @@ const (
 	TEAMS_BY_GROUP_QUERY        = `SELECT * FROM teams WHERE group_name = ?`
 	USERS_TOKEN_BY_NAME_QUERY   = `SELECT id, token, role FROM users WHERE name = ?`
 	GET_VALUES_BY_TEAM_ID_QUERY = `SELECT value FROM teams WHERE id = ?`
+	GET_USER_TEAMS_QUERY        = `SELECT 
+									teams.id,
+									teams.name
+									FROM teams
+									JOIN user_teams ON teams.id = user_teams.team_id
+									WHERE user_teams.user_id = ?`
 )
