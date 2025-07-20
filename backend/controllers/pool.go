@@ -106,7 +106,7 @@ func GetTeamsByUser(c *gin.Context) {
 	var teams []models.Team
 	for rows.Next() {
 		var team models.Team
-		if err := rows.Scan(&team.ID, &team.Name); err != nil {
+		if err := rows.Scan(&team.ID, &team.Name, &team.Value); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}

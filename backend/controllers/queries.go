@@ -32,7 +32,8 @@ const (
 	GET_VALUES_BY_TEAM_ID_QUERY = `SELECT value FROM teams WHERE id = ?`
 	GET_USER_TEAMS_QUERY        = `SELECT 
 									teams.id,
-									teams.name
+									teams.name,
+									teams.value
 									FROM teams
 									JOIN user_teams ON teams.id = user_teams.team_id
 									WHERE user_teams.user_id = ?`
