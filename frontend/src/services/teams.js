@@ -28,3 +28,23 @@ export async function submitTeams(teams) {
         throw error
     }
 }
+
+export async function getTeamByUser() {
+    const token = getToken()
+    if (!token) {
+        throw new Error("User not authenticated")
+    }
+
+    try {
+        const response = await axios.get(`${API_URL}/pool/teams`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        return response.data
+    } catch (error) {
+        console.error('Error fetching team by user:', error)
+        throw error
+    }
+    
+}

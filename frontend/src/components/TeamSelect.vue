@@ -11,6 +11,10 @@ const props = defineProps({
   modelValue: {
     type: [Object, Number, String, null],
     default: null
+  },
+  placeHolder: {
+    type: String,
+    default: 'Selecciona un equip'
   }
 })
 const emit = defineEmits(['update:modelValue'])
@@ -45,7 +49,7 @@ const inner = computed({
         v-model="inner"  
         :options="teams"
         optionLabel="name"
-        placeholder="Selecciona un equip"
+        :placeholder="teams.length === 0 ? 'No hay equipos' : (inner?.name || props.placeHolder)"
         class="w-full md:w-56"
     />
     <p v-if="error" class="text-red-500 text-xs">{{ error }}</p>

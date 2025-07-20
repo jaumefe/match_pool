@@ -1,7 +1,7 @@
 <script setup>
 import TeamSelect from '../components/TeamSelect.vue'
-import { ref } from 'vue'
-import { submitTeams } from '../services/teams.js'
+import { ref, onMounted } from 'vue'
+import { submitTeams, getTeamByUser } from '../services/teams.js'
 
 const selectedA = ref(null)
 const selectedB1 = ref(null)
@@ -11,6 +11,22 @@ const selectedC2 = ref(null)
 const selectedD1 = ref(null)
 const selectedD2 = ref(null)
 const error = ref('')
+
+// Initialize selected teams with values from getTeamByUser
+// getTeamByUser is assumed to return a promise that resolves to an object with team IDs
+onMounted(async() => {
+  const userTeams = await getTeamByUser()
+  if (userTeams) {
+    console.log('User Teams:', userTeams)
+    selectedA.value = userTeams[0] || { value: 0 }
+    selectedB1.value = userTeams[1] || { value: 0 }
+    selectedB2.value = userTeams[2] || { value: 0 }
+    selectedC1.value = userTeams[3] || { value: 0 }
+    selectedC2.value = userTeams[4] || { value: 0 }
+    selectedD1.value = userTeams[5] || { value: 0 }
+    selectedD2.value = userTeams[6] || { value: 0 }
+  }
+})
 
 selectedA.value = { value: 0 }
 selectedB1.value = { value: 0 }
