@@ -43,6 +43,17 @@ func SubmitTeamsUser(c *gin.Context) {
 		return
 	}
 
+	wasUpdated, err := updateUserTeams(input.TeamsID, input.userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to update user teams: %v", err)})
+		return
+	}
+
+	if wasUpdated {
+		c.JSON(http.StatusOK, gin.H{"message": "Teams updated successfully"})
+		return
+	}
+
 	for _, teamID := range input.TeamsID {
 		_, err := db.DB.Exec("INSERT INTO user_teams (user_id, team_id) VALUES (?, ?)", input.userID, teamID)
 		if err != nil {
@@ -81,6 +92,41 @@ func checkUniqueTeamsID(teams []int) error {
 		teamSet[teamID] = struct{}{}
 	}
 	return nil
+}
+
+func updateUserTeams(ids []int, userID int) (bool, error) {
+	_, err := db.DB.Exec(PRAGMA_FOREIGN_KEYS_ON)
+	if err != nil {
+		return false, err
+	}
+
+	rows, err := db.DB.Query(GET_USER_TEAM_ID_BY_USER_ID_QUERY, userID)
+	if err != nil {
+		return false, err
+	}
+	defer rows.Close()
+
+	var existingTeamIDs []int
+	for rows.Next() {
+		var teamID int
+		if err := rows.Scan(&teamID); err != nil {
+			return false, err
+		}
+		existingTeamIDs = append(existingTeamIDs, teamID)
+	}
+
+	if len(existingTeamIDs) == 0 {
+		return false, nil
+	}
+
+	for i, teamID := range ids {
+		_, err := db.DB.Exec(UPDATE_USER_TEAMS, teamID, userID, existingTeamIDs[i])
+		if err != nil {
+			return false, err
+		}
+	}
+
+	return true, nil
 }
 
 func GetTeamsByUser(c *gin.Context) {

@@ -37,4 +37,10 @@ const (
 									FROM teams
 									JOIN user_teams ON teams.id = user_teams.team_id
 									WHERE user_teams.user_id = ?`
+	GET_USER_TEAM_ID_BY_USER_ID_QUERY = `SELECT team_id
+										FROM user_teams
+										WHERE user_id = ?`
+	UPDATE_USER_TEAMS = `UPDATE user_teams
+						SET team_id = ?
+						WHERE user_id = ? AND team_id = ?`
 )
