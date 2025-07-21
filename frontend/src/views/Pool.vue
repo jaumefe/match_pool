@@ -1,5 +1,6 @@
 <script setup>
 import TeamSelect from '../components/TeamSelect.vue'
+import ScorerSelect from '../components/ScorerSelect.vue'
 import { ref, onMounted } from 'vue'
 import { submitTeams, getTeamByUser } from '../services/teams.js'
 
@@ -10,6 +11,14 @@ const selectedC1 = ref(null)
 const selectedC2 = ref(null)
 const selectedD1 = ref(null)
 const selectedD2 = ref(null)
+const selectedScorerA = ref(null)
+const selectedScorerB1 = ref(null)
+const selectedScorerB2 = ref(null)
+const selectedScorerC1 = ref(null)
+const selectedScorerC2 = ref(null)
+const selectedScorerC3 = ref(null)
+const selectedScorerD1 = ref(null)
+const selectedScorerD2 = ref(null)
 const error = ref('')
 
 // Initialize selected teams with values from getTeamByUser
@@ -17,7 +26,6 @@ const error = ref('')
 onMounted(async() => {
   const userTeams = await getTeamByUser()
   if (userTeams) {
-    console.log('User Teams:', userTeams)
     selectedA.value = userTeams[0] || { value: 0 }
     selectedB1.value = userTeams[1] || { value: 0 }
     selectedB2.value = userTeams[2] || { value: 0 }
@@ -69,6 +77,16 @@ async function submit(){
   </div>
   <p>TOTAL: {{ selectedA.value + selectedB1.value + selectedB2.value + selectedC1.value + selectedC2.value + selectedD1.value + selectedD2.value }}</p>
   <p><button @click="submit">Confirmar</button></p>
+  <div class="container">
+    <div class="column"><ScorerSelect v-model="selectedScorerA" :group-id="1" class="mb-4" /></div>
+    <div class="column"><ScorerSelect v-model="selectedScorerB1" :group-id="2" class="mb-4" /></div>
+    <div class="column"><ScorerSelect v-model="selectedScorerB2" :group-id="2" class="mb-4" /></div>
+    <div class="column"><ScorerSelect v-model="selectedScorerC1" :group-id="3" class="mb-4" /></div>
+    <div class="column"><ScorerSelect v-model="selectedScorerC2" :group-id="3" class="mb-4" /></div>
+    <div class="column"><ScorerSelect v-model="selectedScorerC3" :group-id="3" class="mb-4" /></div>
+    <div class="column"><ScorerSelect v-model="selectedScorerD1" :group-id="4" class="mb-4" /></div>
+    <div class="column"><ScorerSelect v-model="selectedScorerD2" :group-id="4" class="mb-4" /></div>
+  </div>
 </template>
 
 
@@ -80,7 +98,7 @@ async function submit(){
 }
 
 .column {
-  flex: 1 1 calc(14.2857% - 10px); /* 7 columnas por fila */
+  flex: 1 1 calc(25% - 10px); /* 7 columnas por fila */
   box-sizing: border-box;
   padding: 10px;
   text-align: center;

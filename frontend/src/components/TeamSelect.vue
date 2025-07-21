@@ -49,7 +49,7 @@ const inner = computed({
         v-model="inner"  
         :options="teams"
         optionLabel="name"
-        :placeholder="teams.length === 0 ? 'No hay equipos' : (inner?.name || props.placeHolder)"
+        :placeholder="teams.length === 0 ? placeHolder : (inner?.name || props.placeHolder)"
         class="w-full md:w-56"
     />
     <p v-if="error" class="text-red-500 text-xs">{{ error }}</p>
