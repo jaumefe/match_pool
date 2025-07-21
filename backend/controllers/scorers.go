@@ -47,7 +47,7 @@ func GetScorersByGroupAndPosition(c *gin.Context) {
 	}
 
 	var rows *sql.Rows
-	if position == "any" {
+	if position == "any" || position == "/" {
 		rows, err = db.DB.Query(SCORERS_BY_GROUP_QUERY, groupName)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query scorers"})
