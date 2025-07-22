@@ -3,6 +3,7 @@ import TeamSelect from '../components/TeamSelect.vue'
 import ScorerSelect from '../components/ScorerSelect.vue'
 import { ref, onMounted } from 'vue'
 import { submitTeams, getTeamByUser } from '../services/teams.js'
+import { submitScorers, getScorerByUser } from '../services/scorers.js'
 
 const selectedA = ref(null)
 const selectedB1 = ref(null)
@@ -34,6 +35,18 @@ onMounted(async() => {
     selectedD1.value = userTeams[5] || { value: 0 }
     selectedD2.value = userTeams[6] || { value: 0 }
   }
+
+  const userScorers = await getScorerByUser()
+  if (userScorers) {
+    selectedScorerA.value = userScorers[0]
+    selectedScorerB1.value = userScorers[1]
+    selectedScorerB2.value = userScorers[2]
+    selectedScorerC1.value = userScorers[3]
+    selectedScorerC2.value = userScorers[4]
+    selectedScorerC3.value = userScorers[5]
+    selectedScorerD1.value = userScorers[6]
+    selectedScorerD2.value = userScorers[7]
+  }
 })
 
 selectedA.value = { value: 0 }
@@ -44,7 +57,7 @@ selectedC2.value = { value: 0 }
 selectedD1.value = { value: 0 }
 selectedD2.value = { value: 0 }
 
-async function submit(){  
+async function submitTeamsUser(){  
   error.value = ''
   try {
     const teams = [
@@ -59,6 +72,25 @@ async function submit(){
     const result = await submitTeams(teams)
   } catch (err) {
     error.value = 'Error assigning teams'
+  }
+}
+
+async function submitScorerUser(){
+  error.value = ''
+  try {
+    const scorers = [
+      selectedScorerA.value?.id,
+      selectedScorerB1.value?.id,
+      selectedScorerB2.value?.id,
+      selectedScorerC1.value?.id,
+      selectedScorerC2.value?.id,
+      selectedScorerC3.value?.id,
+      selectedScorerD1.value?.id,
+      selectedScorerD2.value?.id
+    ]
+    const result = await submitScorers(scorers)
+  } catch (err) {
+    error.value = "Error assigning scorers"
   }
 }
 </script>
@@ -76,7 +108,7 @@ async function submit(){
     <div class="column"><TeamSelect v-model="selectedD2" :group-id="4" class="mb-4" /><p> {{ selectedD2.value }}</p></div>
   </div>
   <p>TOTAL: {{ selectedA.value + selectedB1.value + selectedB2.value + selectedC1.value + selectedC2.value + selectedD1.value + selectedD2.value }}</p>
-  <p><button @click="submit">Confirmar</button></p>
+  <p><button @click="submitTeamsUser">Confirmar equips</button></p>
   <div class="container">
     <div class="column"><ScorerSelect v-model="selectedScorerA" :group-id="1" class="mb-4" /></div>
     <div class="column"><ScorerSelect v-model="selectedScorerB1" :group-id="2" class="mb-4" /></div>
@@ -87,6 +119,7 @@ async function submit(){
     <div class="column"><ScorerSelect v-model="selectedScorerD1" :group-id="4" class="mb-4" /></div>
     <div class="column"><ScorerSelect v-model="selectedScorerD2" :group-id="4" class="mb-4" /></div>
   </div>
+  <p><button @click="submitScorerUser">Confirmar jugadors</button></p>
 </template>
 
 
