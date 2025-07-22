@@ -27,7 +27,7 @@ func SubmitTeamsUser(c *gin.Context) {
 		return
 	}
 
-	if err := checkUniqueTeamsID(input.TeamsID); err != nil {
+	if err := checkUniqueID(input.TeamsID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -83,13 +83,13 @@ func checkUserTeamsPoints(ids []int) (int, error) {
 	return totalPoints, nil
 }
 
-func checkUniqueTeamsID(teams []int) error {
-	teamSet := make(map[int]struct{})
-	for _, teamID := range teams {
-		if _, exists := teamSet[teamID]; exists {
-			return fmt.Errorf("duplicate team ID found: %d", teamID)
+func checkUniqueID(ids []int) error {
+	idSet := make(map[int]struct{})
+	for _, id := range ids {
+		if _, exists := idSet[id]; exists {
+			return fmt.Errorf("duplicate ID found: %d", id)
 		}
-		teamSet[teamID] = struct{}{}
+		idSet[id] = struct{}{}
 	}
 	return nil
 }
@@ -160,4 +160,115 @@ func GetTeamsByUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, teams)
+}
+
+func SubmitScorersUser(c *gin.Context) {
+	userID, ok := c.Get("user_id")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User ID not found in context"})
+		return
+	}
+
+	var input struct {
+		userID    int
+		ScorersID []int `json:"scorers_id"`
+	}
+	input.userID = userID.(int)
+
+	if err := c.BindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Invalid input. %v", err)})
+		return
+	}
+
+	if err := checkUniqueID(input.ScorersID); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	wasUpdated, err := updateUserScorers(input.ScorersID, input.userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to update user scorers: %v", err)})
+		return
+	}
+
+	if wasUpdated {
+		c.JSON(http.StatusOK, gin.H{"message": "Scorers updated successfully"})
+		return
+	}
+
+	for _, scorerID := range input.ScorersID {
+		_, err := db.DB.Exec("INSERT INTO user_scorers (player_id, user_id) VALUES (?, ?)", scorerID, input.userID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to assign scorer"})
+			return
+		}
+	}
+	c.JSON(http.StatusCreated, gin.H{"message": "Scorers assigned successfully"})
+}
+
+func updateUserScorers(ids []int, userID int) (bool, error) {
+	_, err := db.DB.Exec(PRAGMA_FOREIGN_KEYS_ON)
+	if err != nil {
+		return false, err
+	}
+
+	rows, err := db.DB.Query(GET_USER_SCORERS_ID_BY_USER_ID_QUERY, userID)
+	if err != nil {
+		return false, err
+	}
+	defer rows.Close()
+
+	var existingScorerIDs []int
+	for rows.Next() {
+		var scorerID int
+		if err := rows.Scan(&scorerID); err != nil {
+			return false, err
+		}
+		existingScorerIDs = append(existingScorerIDs, scorerID)
+	}
+
+	if len(existingScorerIDs) == 0 {
+		return false, nil
+	}
+
+	for i, scorerID := range ids {
+		_, err := db.DB.Exec(UPDATE_USER_SCORERS, scorerID, userID, existingScorerIDs[i])
+		if err != nil {
+			return false, err
+		}
+	}
+
+	return true, nil
+}
+
+func GetScorerByUser(c *gin.Context) {
+	userID, ok := c.Get("user_id")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User ID not found in context"})
+		return
+	}
+
+	_, err := db.DB.Exec(PRAGMA_FOREIGN_KEYS_ON)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	rows, err := db.DB.Query(GET_USER_SCORERS_QUERY, userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer rows.Close()
+
+	var scorers []models.Scorer
+	for rows.Next() {
+		var scorer models.Scorer
+		if err := rows.Scan(&scorer.ID, &scorer.Name); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		scorers = append(scorers, scorer)
+	}
+	c.JSON(http.StatusOK, scorers)
 }

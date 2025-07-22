@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -18,7 +17,6 @@ func InitDB(dataSource string) error {
 
 	// Create tables if they do not exist
 	if err := createTables(); err != nil {
-		fmt.Println("Aquí")
 		return err
 	}
 
@@ -92,11 +90,18 @@ func createTables() error {
 			FOREIGN KEY (match_id) REFERENCES match(id),
 			PRIMARY KEY (player_id, match_id)
 		);`,
+
+		`CREATE TABLE IF NOT EXISTS user_scorers (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			player_id INTEGER NOT NULL,
+			user_id INTEGER NOT NULL,
+			FOREIGN KEY (player_id) REFERENCES scorers(id),
+			FOREIGN KEY (user_id) REFERENCES users(id)
+			);`,
 	}
 
 	for _, q := range queries {
 		if _, err := DB.Exec(q); err != nil {
-			fmt.Println(q)
 			return err
 		}
 	}

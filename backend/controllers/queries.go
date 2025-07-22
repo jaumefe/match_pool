@@ -43,4 +43,16 @@ const (
 	UPDATE_USER_TEAMS = `UPDATE user_teams
 						SET team_id = ?
 						WHERE user_id = ? AND team_id = ?`
+	GET_USER_SCORERS_QUERY = `SELECT
+							scorers.id,
+							scorers.name
+							FROM scorers
+							JOIN user_scorers ON scorers.id = user_scorers.player_id
+							WHERE user_scorers.user_id = ?`
+	GET_USER_SCORERS_ID_BY_USER_ID_QUERY = `SELECT player_id
+											FROM user_scorers
+											WHERE user_id = ?`
+	UPDATE_USER_SCORERS = `UPDATE user_scorers
+						SET player_id = ?
+						WHERE user_id = ? AND player_id = ?`
 )
