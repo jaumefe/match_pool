@@ -96,28 +96,28 @@ async function submitScorerUser(){
 </script>
 
 <template>
-  <h2>Asignar Equipos</h2>
-
+  <h2>Escollir equips</h2>
   <div class="container">
-    <div class="column"><TeamSelect v-model="selectedA"  :group-id="1" class="mb-4" /><p> {{ selectedA.value }}</p></div>
-    <div class="column"><TeamSelect v-model="selectedB1" :group-id="2" class="mb-4" /><p> {{ selectedB1.value }}</p></div>
-    <div class="column"><TeamSelect v-model="selectedB2" :group-id="2" class="mb-4" /><p> {{ selectedB2.value }}</p></div>
-    <div class="column"><TeamSelect v-model="selectedC1" :group-id="3" class="mb-4" /><p> {{ selectedC1.value }}</p></div>
-    <div class="column"><TeamSelect v-model="selectedC2" :group-id="3" class="mb-4" /><p> {{ selectedC2.value }}</p></div>
-    <div class="column"><TeamSelect v-model="selectedD1" :group-id="4" class="mb-4" /><p> {{ selectedD1.value }}</p></div>
-    <div class="column"><TeamSelect v-model="selectedD2" :group-id="4" class="mb-4" /><p> {{ selectedD2.value }}</p></div>
+    <div class="column"><h3>Grup A</h3><TeamSelect v-model="selectedA"  :group-id="1" class="mb-4" /><p> {{ selectedA.value }}</p></div>
+    <div class="column"><h3>Grup B</h3><TeamSelect v-model="selectedB1" :group-id="2" class="mb-4" /><p> {{ selectedB1.value }}</p></div>
+    <div class="column"><h3>Grup B</h3><TeamSelect v-model="selectedB2" :group-id="2" class="mb-4" /><p> {{ selectedB2.value }}</p></div>
+    <div class="column"><h3>Grup C</h3><TeamSelect v-model="selectedC1" :group-id="3" class="mb-4" /><p> {{ selectedC1.value }}</p></div>
+    <div class="column"><h3>Grup C</h3><TeamSelect v-model="selectedC2" :group-id="3" class="mb-4" /><p> {{ selectedC2.value }}</p></div>
+    <div class="column"><h3>Grup D</h3><TeamSelect v-model="selectedD1" :group-id="4" class="mb-4" /><p> {{ selectedD1.value }}</p></div>
+    <div class="column"><h3>Grup D</h3><TeamSelect v-model="selectedD2" :group-id="4" class="mb-4" /><p> {{ selectedD2.value }}</p></div>
   </div>
   <p>TOTAL: {{ selectedA.value + selectedB1.value + selectedB2.value + selectedC1.value + selectedC2.value + selectedD1.value + selectedD2.value }}</p>
   <p><button @click="submitTeamsUser">Confirmar equips</button></p>
+  <h2>Escollir golejadors</h2>
   <div class="container">
-    <div class="column"><ScorerSelect v-model="selectedScorerA" :group-id="1" class="mb-4" /></div>
-    <div class="column"><ScorerSelect v-model="selectedScorerB1" :group-id="2" class="mb-4" /></div>
-    <div class="column"><ScorerSelect v-model="selectedScorerB2" :group-id="2" class="mb-4" /></div>
-    <div class="column"><ScorerSelect v-model="selectedScorerC1" :group-id="3" class="mb-4" /></div>
-    <div class="column"><ScorerSelect v-model="selectedScorerC2" :group-id="3" class="mb-4" /></div>
-    <div class="column"><ScorerSelect v-model="selectedScorerC3" :group-id="3" class="mb-4" /></div>
-    <div class="column"><ScorerSelect v-model="selectedScorerD1" :group-id="4" class="mb-4" /></div>
-    <div class="column"><ScorerSelect v-model="selectedScorerD2" :group-id="4" class="mb-4" /></div>
+    <div class="column"><h3>Grup A</h3><ScorerSelect v-model="selectedScorerA" :group-id="1" class="mb-4" /></div>
+    <div class="column"><h3>Grup B</h3><ScorerSelect v-model="selectedScorerB1" :group-id="2" class="mb-4" /></div>
+    <div class="column"><h3>Grup B</h3><ScorerSelect v-model="selectedScorerB2" :group-id="2" class="mb-4" /></div>
+    <div class="column"><h3>Grup C</h3><ScorerSelect v-model="selectedScorerC1" :group-id="3" class="mb-4" /></div>
+    <div class="column"><h3>Grup C</h3><ScorerSelect v-model="selectedScorerC2" :group-id="3" class="mb-4" /></div>
+    <div class="column"><h3>Grup C</h3><ScorerSelect v-model="selectedScorerC3" :group-id="3" class="mb-4" /></div>
+    <div class="column"><h3>Grup D</h3><ScorerSelect v-model="selectedScorerD1" :group-id="4" class="mb-4" /></div>
+    <div class="column"><h3>Grup D</h3><ScorerSelect v-model="selectedScorerD2" :group-id="4" class="mb-4" /></div>
   </div>
   <p><button @click="submitScorerUser">Confirmar jugadors</button></p>
 </template>
