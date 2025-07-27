@@ -37,9 +37,9 @@ func createTables() error {
 			team_home_score INTEGER DEFAULT 0,
 			team_away_score INTEGER DEFAULT 0,
 			penalty_winner_id INTEGER,
-			FOREIGN KEY (team_home_id) REFERENCES team(id),
-			FOREIGN KEY (team_away_id) REFERENCES team(id),
-			FOREIGN KEY (penalty_winner_id) REFERENCES team(id),
+			FOREIGN KEY (team_home_id) REFERENCES teams(id),
+			FOREIGN KEY (team_away_id) REFERENCES teams(id),
+			FOREIGN KEY (penalty_winner_id) REFERENCES teams(id),
 			FOREIGN KEY (stage_id) REFERENCES stage(id)
 		);`,
 
