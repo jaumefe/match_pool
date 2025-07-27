@@ -104,10 +104,14 @@ func computePointsTeams(teams []models.Team) (int, error) {
 			} else if input.teamHomeID == team.ID {
 				if input.teamHomeScore > input.teamAwayScore {
 					points += pointsPerStage[input.stageID]
+				} else if input.teamHomeScore == input.teamAwayScore {
+					points++
 				}
 			} else if input.teamAwayID == team.ID {
 				if input.teamHomeScore < input.teamAwayScore {
 					points += pointsPerStage[input.stageID]
+				} else if input.teamHomeScore == input.teamAwayScore {
+					points++
 				}
 			}
 		}
