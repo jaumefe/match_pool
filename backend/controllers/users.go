@@ -10,6 +10,17 @@ import (
 )
 
 func RegisterUser(c *gin.Context) {
+	role, ok := c.Get("role")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "role not found in context"})
+		return
+	}
+
+	if role != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Not authorized to register matches"})
+		return
+	}
+
 	var input struct {
 		Name     string `json:"name"`
 		Password string `json:"password"`
@@ -20,15 +31,18 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 
-	// Hashea la contraseña
+	if input.Role == "" {
+		input.Role = "user"
+	}
+
+	// Hassh password to store it
 	hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
 		return
 	}
 
-	// Guarda el usuario
-	_, err = db.DB.Exec("INSERT INTO users(name, token) VALUES (?, ?)", input.Name, string(hash))
+	_, err = db.DB.Exec("INSERT INTO users(name, token, role) VALUES (?, ?, ?)", input.Name, string(hash), input.Role)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 		return
