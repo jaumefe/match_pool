@@ -62,7 +62,7 @@ const (
 						SET player_id = ?
 						WHERE user_id = ? AND player_id = ?`
 	USERS_QUERY            = `SELECT id, name, score FROM users`
-	GET_TEAMS_POINTS_QUERY = `SELECT
+	GET_MATCH_RESULT_QUERY = `SELECT
 							stage_id,
 							team_home_score,
 							team_away_score,
@@ -71,18 +71,34 @@ const (
 							penalty_winner_id
 							FROM match
 							WHERE team_home_id = ? OR team_away_id = ?`
-	POINT_PER_STAGE_QUERY = `SELECT id, points_win FROM stage`
-	REGISTER_MATCH        = `WITH ids AS (
-								SELECT
-									(SELECT id FROM teams WHERE name = ?) AS home_id,
-									(SELECT id FROM teams WHERE name = ?) AS away_id,
-									(SELECT id FROM stage WHERE name = ?) AS stage_id,
-									(SELECT id FROM teams WHERE name = ?) AS penalty_winner_id
-								)
-								INSERT INTO match (
-									leg, stage_id, team_home_id, team_away_id, team_home_score, team_away_score, penalty_winner_id
-								)
-								SELECT
-									?, stage_id, home_id, away_id, ?, ?, penalty_winner_id
-								FROM ids;`
+	POINT_PER_STAGE_QUERY        = `SELECT id, points_win FROM stage`
+	REGISTER_MATCH_BY_TEAM_NAMES = `WITH ids AS (
+									SELECT
+										(SELECT id FROM teams WHERE name = ?) AS home_id,
+										(SELECT id FROM teams WHERE name = ?) AS away_id,
+										(SELECT id FROM stage WHERE name = ?) AS stage_id,
+										(SELECT id FROM teams WHERE name = ?) AS penalty_winner_id
+									)
+									INSERT INTO match (
+										leg, stage_id, team_home_id, team_away_id, team_home_score, team_away_score, penalty_winner_id
+									)
+									SELECT
+										?, stage_id, home_id, away_id, ?, ?, penalty_winner_id
+									FROM ids;`
+	REGISTER_GOAL_BY_PLAYER_NAME_AND_MATCH_ID = `WITH ids AS (
+												SELECT
+													(SELECT id FROM scorers WHERE name = ?) AS player_id											)
+												INSERT INTO player_goals (
+													player_id, match_id, goals
+												)
+												SELECT
+													player_id, ?, ?
+												FROM ids;`
+	POINTS_PER_GOAL_QUERY   = `SELECT pointsPerGoal, stage_id FROM points_goals`
+	GET_POINTS_SCORER_QUERY = `SELECT
+							player_goals.goals,
+							match.stage_id
+							FROM player_goals
+							JOIN match ON player_goals.match_id = match.id
+							WHERE player_goals.player_id = ?;`
 )

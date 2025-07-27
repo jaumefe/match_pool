@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"fmt"
 	db "match_pool_back/database"
 	"match_pool_back/models"
 	"net/http"
@@ -34,6 +33,8 @@ func GetPointsAllUsers(c *gin.Context) {
 		users = append(users, user)
 	}
 
+	pointsTeamsUser := make(map[string]int, len(users))
+	pointsScorerUser := make(map[string]int, len(users))
 	pointsUser := make(map[string]int, len(users))
 	for _, user := range users {
 		var teams []models.Team
@@ -52,12 +53,34 @@ func GetPointsAllUsers(c *gin.Context) {
 			}
 			teams = append(teams, team)
 		}
-		pointsUser[user.Name], err = computePointsTeams(teams)
+		pointsTeamsUser[user.Name], err = computePointsTeams(teams)
 		if err != nil {
-			fmt.Println(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to compute points"})
 			return
 		}
+		rows.Close()
+
+		var scorers []models.Scorer
+		rows, err = db.DB.Query(GET_USER_SCORERS_QUERY, user.ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query user teams"})
+			return
+		}
+
+		for rows.Next() {
+			var scorer models.Scorer
+			if err := rows.Scan(&scorer.ID, &scorer.Name); err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to scan team"})
+				return
+			}
+			scorers = append(scorers, scorer)
+		}
+		pointsScorerUser[user.Name], err = computePointsGoal(scorers)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to compute points"})
+			return
+		}
+		pointsUser[user.Name] = pointsTeamsUser[user.Name] + pointsScorerUser[user.Name]
 	}
 	c.JSON(http.StatusOK, pointsUser)
 }
@@ -80,7 +103,7 @@ func computePointsTeams(teams []models.Team) (int, error) {
 	}
 
 	for _, team := range teams {
-		rows, err := db.DB.Query(GET_TEAMS_POINTS_QUERY, team.ID, team.ID)
+		rows, err := db.DB.Query(GET_MATCH_RESULT_QUERY, team.ID, team.ID)
 		if err != nil {
 			return 0, err
 		}
@@ -117,5 +140,44 @@ func computePointsTeams(teams []models.Team) (int, error) {
 		}
 
 	}
+	return points, nil
+}
+
+func computePointsGoal(scorers []models.Scorer) (int, error) {
+	points := 0
+	rows, err := db.DB.Query(POINTS_PER_GOAL_QUERY)
+	if err != nil {
+		return 0, err
+	}
+	defer rows.Close()
+
+	pointsGoalPerStage := make(map[int]int)
+	for rows.Next() {
+		var pointsGoal, stageId int
+		if err := rows.Scan(&pointsGoal, &stageId); err != nil {
+			return 0, err
+		}
+		pointsGoalPerStage[stageId] = pointsGoal
+	}
+
+	for _, scorer := range scorers {
+		rows, err := db.DB.Query(GET_POINTS_SCORER_QUERY, scorer.ID)
+		if err != nil {
+			return 0, err
+		}
+		defer rows.Close()
+
+		var input struct {
+			goals   int
+			stageID int
+		}
+		for rows.Next() {
+			if err := rows.Scan(&input.goals, &input.stageID); err != nil {
+				return 0, err
+			}
+			points += input.goals * pointsGoalPerStage[input.stageID]
+		}
+	}
+
 	return points, nil
 }

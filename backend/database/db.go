@@ -97,7 +97,14 @@ func createTables() error {
 			user_id INTEGER NOT NULL,
 			FOREIGN KEY (player_id) REFERENCES scorers(id),
 			FOREIGN KEY (user_id) REFERENCES users(id)
-			);`,
+		);`,
+
+		`CREATE TABLE IF NOT EXISTS points_goals (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			pointsPerGoal INTEGER NOT NULL DEFAULT 1,
+			stage_id INTEGER NOT NULL,
+			FOREIGN KEY (stage_id) REFERENCES stage(id)
+		);`,
 	}
 
 	for _, q := range queries {

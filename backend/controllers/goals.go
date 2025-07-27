@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	db "match_pool_back/database"
 	"match_pool_back/models"
 	"net/http"
@@ -8,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterMatch(c *gin.Context) {
+func RegisterGoals(c *gin.Context) {
 	role, ok := c.Get("role")
 	if !ok {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "role not found in context"})
@@ -20,14 +21,10 @@ func RegisterMatch(c *gin.Context) {
 		return
 	}
 
-	var input models.Match
+	var input models.Goal
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
-	}
-
-	if input.Leg != 2 {
-		input.Leg = 1
 	}
 
 	_, err := db.DB.Exec(PRAGMA_FOREIGN_KEYS_ON)
@@ -36,11 +33,12 @@ func RegisterMatch(c *gin.Context) {
 		return
 	}
 
-	_, err = db.DB.Exec(REGISTER_MATCH_BY_TEAM_NAMES, input.TeamHome, input.TeamAway, input.Stage, input.PenaltyWinner, input.Leg, input.TeamHomeScore, input.TeamAwayScore)
+	_, err = db.DB.Exec(REGISTER_GOAL_BY_PLAYER_NAME_AND_MATCH_ID, input.Player, input.MatchID, input.Goals)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register match"})
+		fmt.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register goal(s)"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Match registered successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Goal(s) registered successfully"})
 }
