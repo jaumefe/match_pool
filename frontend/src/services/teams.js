@@ -1,9 +1,19 @@
 import axios from 'axios'
 import { getToken, API_URL } from './auth'
 
-export async function getTeams(groupId){
+export async function getTeamsByGroup(groupId){
     try {
         const response = await axios.get(`${API_URL}/teams/${groupId}`)
+        return response.data
+    } catch (error) {
+        console.error('Error fetching teams:', error)
+        throw error
+    }
+}
+
+export async function getTeams(){
+    try {
+        const response = await axios.get(`${API_URL}/teams`)
         return response.data
     } catch (error) {
         console.error('Error fetching teams:', error)

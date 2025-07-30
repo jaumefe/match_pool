@@ -1,6 +1,6 @@
 <script setup>
-import TeamSelect from '../components/TeamSelect.vue'
-import ScorerSelect from '../components/ScorerSelect.vue'
+import TeamSelect from '../components/PoolTeamSelect.vue'
+import ScorerSelect from '../components/PoolScorerSelect.vue'
 import { ref, onMounted } from 'vue'
 import { submitTeams, getTeamByUser } from '../services/teams.js'
 import { submitScorers, getScorerByUser } from '../services/scorers.js'

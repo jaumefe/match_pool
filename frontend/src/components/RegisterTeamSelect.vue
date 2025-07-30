@@ -1,13 +1,9 @@
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { getTeams } from '../services/teams.js'
 import Select from 'primevue/select'
 
 const props = defineProps({
-  groupId: {
-    type: Number,
-    required: true
-  },
   modelValue: {
     type: [Object, Number, String, null],
     default: null
@@ -22,21 +18,20 @@ const emit = defineEmits(['update:modelValue'])
 const teams = ref([])
 const error = ref('')
 
-async function fetchTeams(groupId) {
+async function fetchTeams() {
   error.value = ''
   try {
-    const result = await getTeams(groupId)
+    const result = await getTeams()
     teams.value = result.map(team=>(
       { name: team.name, id: team.id, value: team.value}
-    ))
+    )).sort((a, b) => a.name.localeCompare(b.name));
   } catch (err) {
     error.value = err.message
     console.log('Error fetching teams:', err)
   }
 }
 
-onMounted(() => fetchTeams(props.groupId))
-watch(() => props.groupId, fetchTeams)
+onMounted(() => fetchTeams())
 
 const inner = computed({
   get: () => props.modelValue,
@@ -54,4 +49,3 @@ const inner = computed({
     />
     <p v-if="error" class="text-red-500 text-xs">{{ error }}</p>
 </template>
-
