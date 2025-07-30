@@ -85,6 +85,10 @@ const (
 									SELECT
 										?, stage_id, home_id, away_id, ?, ?, penalty_winner_id
 									FROM ids;`
+	REGISTER_MATCH_BY_ID = `INSERT INTO match (
+								leg, stage_id, team_home_id, team_away_id, team_home_score, team_away_score, penalty_winner_id
+							)
+							VALUES (?, ?, ?, ?, ?, ?, ?);`
 	REGISTER_GOAL_BY_PLAYER_NAME_AND_MATCH_ID = `WITH ids AS (
 												SELECT
 													(SELECT id FROM scorers WHERE name = ?) AS player_id											)
@@ -101,4 +105,5 @@ const (
 							FROM player_goals
 							JOIN match ON player_goals.match_id = match.id
 							WHERE player_goals.player_id = ?;`
+	GET_ID_NAME_STAGES_QUERY = `SELECT id, name FROM stage`
 )

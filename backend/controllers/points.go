@@ -138,8 +138,8 @@ func computePointsTeams(teams []models.Team) (int, error) {
 				}
 			}
 		}
-
 	}
+
 	return points, nil
 }
 

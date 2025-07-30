@@ -44,3 +44,34 @@ func RegisterMatch(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Match registered successfully"})
 }
+
+func RegisterMatchById(c *gin.Context) {
+	role, ok := c.Get("role")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "role not found in context"})
+		return
+	}
+
+	if role != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Not authorized to register matches"})
+		return
+	}
+
+	var input models.MatchById
+	if err := c.BindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+
+	if input.Leg != 2 {
+		input.Leg = 1
+	}
+
+	_, err := db.DB.Exec(REGISTER_MATCH_BY_ID, input.Leg, input.StageID, input.TeamHomeID, input.TeamAwayID, input.TeamHomeScore, input.TeamAwayScore, input.PenaltyWinnerID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register match"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Match registered successfully"})
+}
