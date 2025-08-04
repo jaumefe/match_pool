@@ -26,6 +26,11 @@ const (
 											FROM scorers
 											JOIN teams ON scorers.team_id = teams.id
 											WHERE teams.group_name = ? AND scorers.position = ?`
+	SCORERS_BY_TEAM_ID_QUERY = `SELECT
+								id,
+								name
+								FROM scorers
+								WHERE team_id = ?`
 	TEAMS_QUERY                 = `SELECT * FROM teams`
 	TEAMS_BY_GROUP_QUERY        = `SELECT * FROM teams WHERE group_name = ?`
 	USERS_TOKEN_BY_NAME_QUERY   = `SELECT id, token, role FROM users WHERE name = ?`
@@ -98,6 +103,10 @@ const (
 												SELECT
 													player_id, ?, ?
 												FROM ids;`
+	REGISTER_GOAL_BY_PLAYER_AND_MATCH_ID = `INSERT INTO player_goals (
+													player_id, match_id, goals
+												)
+											VALUES (?, ?, ?);`
 	POINTS_PER_GOAL_QUERY   = `SELECT pointsPerGoal, stage_id FROM points_goals`
 	GET_POINTS_SCORER_QUERY = `SELECT
 							player_goals.goals,
@@ -106,4 +115,8 @@ const (
 							JOIN match ON player_goals.match_id = match.id
 							WHERE player_goals.player_id = ?;`
 	GET_ID_NAME_STAGES_QUERY = `SELECT id, name FROM stage`
+	GET_MATCH_ID_QUERY       = `SELECT
+								id
+								FROM match
+								WHERE team_home_id = ? AND team_away_id = ? AND stage_id = ?`
 )

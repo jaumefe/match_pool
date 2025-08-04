@@ -73,3 +73,25 @@ func GetScorersByGroupAndPosition(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, scorers)
 }
+
+func GetScorerByTeamId(c *gin.Context) {
+	teamID := c.Param("teamId")
+
+	rows, err := db.DB.Query(SCORERS_BY_TEAM_ID_QUERY, teamID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query scorers"})
+		return
+	}
+	defer rows.Close()
+
+	var scorers []models.Scorer
+	for rows.Next() {
+		var scorer models.Scorer
+		if err := rows.Scan(&scorer.ID, &scorer.Name); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to scan scorer"})
+			return
+		}
+		scorers = append(scorers, scorer)
+	}
+	c.JSON(http.StatusOK, scorers)
+}

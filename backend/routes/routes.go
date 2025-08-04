@@ -19,6 +19,7 @@ func SetUpRoutes(r *gin.Engine) {
 	r.GET("/teams/:groupName", controllers.GetTeamsByGroup)
 	r.GET("/scorers", controllers.GetScorers)
 	r.GET("/scorers/:groupName/*position", controllers.GetScorersByGroupAndPosition)
+	r.GET("/scorers/teams/:teamId", controllers.GetScorerByTeamId)
 	r.GET("/pool/teams", middleware.JWTMiddleware(), controllers.GetTeamsByUser)
 	r.GET("/pool/scorers", middleware.JWTMiddleware(), controllers.GetScorerByUser)
 	r.GET("/pool/points", middleware.JWTMiddleware(), controllers.GetPointsAllUsers)
@@ -31,4 +32,6 @@ func SetUpRoutes(r *gin.Engine) {
 	r.POST("/matches", middleware.JWTMiddleware(), controllers.RegisterMatch)
 	r.POST("/matches/id", middleware.JWTMiddleware(), controllers.RegisterMatchById)
 	r.POST("/goals", middleware.JWTMiddleware(), controllers.RegisterGoals)
+	r.POST("/goals/id", middleware.JWTMiddleware(), controllers.RegisterGoalsByPlayerID)
+	r.POST("/match/id", middleware.JWTMiddleware(), controllers.GetMatchId)
 }
