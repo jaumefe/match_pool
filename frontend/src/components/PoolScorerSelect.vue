@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
-import { getScorers } from '../services/scorers.js'
+import { getScorersByGroupId } from '../services/scorers.js'
 import Select from 'primevue/select'
 
 const props = defineProps({
@@ -36,7 +36,7 @@ const positionLabels = {
 async function fetchScorers(groupId) {
     error.value = ''
     try {
-        const result = await getScorers(groupId)
+        const result = await getScorersByGroupId(groupId)
         scorers.value = result.map(scorer => ({
             name: scorer.name,
             id: scorer.id,

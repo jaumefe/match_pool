@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { getToken, API_URL } from './auth'
+import { getMatchId } from './match'
 
 export async function submitRegisterMatch(matchData) {
     const token = getToken()
@@ -25,6 +26,37 @@ export async function submitRegisterMatch(matchData) {
             })
         return response.data
     } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function registerScorerMatch(scorerData){
+    const token = getToken()
+    if (!token) {
+        throw new Error("User not authenticated")
+    }
+
+    const match_id = await getMatchId({
+        teamHomeId: scorerData.teamHomeId,
+        teamAwayId: scorerData.teamAwayId,
+        stageId: scorerData.stageId
+    })
+    try {
+        const response = await axios.post(`${API_URL}/goals/id`, 
+                {
+                    'player_id': scorerData.scorerId,
+                    'match_id': match_id.match_id,
+                    'goals': scorerData.goals
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+        return response.data
+    } catch (error) {
+        console.log(error)
         throw error
     }
 }

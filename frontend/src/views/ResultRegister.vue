@@ -2,15 +2,18 @@
 import { ref } from 'vue'
 import RegisterTeamSelect from '../components/RegisterTeamSelect.vue'
 import RegisterStageSelect from '../components/RegisterStageSelect.vue'
-import { submitRegisterMatch } from '../services/result_register.js'
+import RegisterScorerSelect from '../components/RegisterScorerSelect.vue'
+import { submitRegisterMatch, registerScorerMatch } from '../services/result_register.js'
 
 const Stage = ref(null)
 const TeamHome = ref(null)
 const TeamAway = ref(null)
+const Scorer = ref(null)
 const formData = ref({
   scoreHome: 0,
   scoreAway: 0,
-  penaltyWinner: null
+  penaltyWinner: null,
+  goals: 0
 })
 const error = ref('')
 
@@ -38,18 +41,39 @@ async function submitResult(){
   }
 }
 
+async function submitScorers(){
+  error.value = ''
+  try {
+      await registerScorerMatch({
+          stageId: Stage.value?.id,
+          teamHomeId: TeamHome.value?.id,
+          teamAwayId: TeamAway.value?.id,
+          goals: formData.value.goals,
+          scorerId: Scorer.value?.id
+      })
+  } catch (err) {
+      error.value = 'Error registering match'
+  }
+}
+
 </script>
 
 <template>
 <h2>Registrar partits jugats</h2>
-  <div class="container">
-    <div class="column"><RegisterStageSelect v-model="Stage" class="mb-4" /></div>
-    <div class="column"><RegisterTeamSelect v-model="TeamHome" class="mb-4" /></div>
-    <div><input name="scoreHome" :value="formData.scoreHome" @input="onInput" placeholder="Home Goals"></input></div>
-    <div class="column"><RegisterTeamSelect v-model="TeamAway" class="mb-4" /></div>
-    <div><input name="scoreAway" :value="formData.scoreAway" @input="onInput" placeholder="Away Goals"></input></div>
-  </div>
+    <div class="container">
+      <div class="column"><RegisterStageSelect v-model="Stage" class="mb-4" /></div>
+      <div class="column"><RegisterTeamSelect v-model="TeamHome" class="mb-4" /></div>
+      <div><input name="scoreHome" :value="formData.scoreHome" @input="onInput" placeholder="Home Goals"></input></div>
+      <div class="column"><RegisterTeamSelect v-model="TeamAway" class="mb-4" /></div>
+      <div><input name="scoreAway" :value="formData.scoreAway" @input="onInput" placeholder="Away Goals"></input></div>
+    </div>
   <p><button @click="submitResult">Confirmar partit</button></p>
+  <h2>Registrar golejadors</h2>
+    <div class="container">
+      <div class="column"><RegisterScorerSelect v-model="Scorer" :team-home-id="TeamHome?.id" :team-away-id="TeamAway?.id" class="mb-4" /></div>
+      <div><input name="goals" :value="formData.goals" @input="onInput" placeholder="Goals"></input></div>
+    </div>
+<p><button @click="submitScorers">Confirmar golejador</button></p>
 </template>
 
 <style scoped>
