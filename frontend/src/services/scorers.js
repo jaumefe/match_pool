@@ -8,7 +8,7 @@ export async function getScorersByGroupId(groupId) {
     }
 
     try {
-        const response = await axios.get(`${API_URL}/scorers/${groupId}`,
+        const response = await axios.get(`${API_URL}/scorers/${groupId}/`,
             {
             headers: {
                 'Authorization': `Bearer ${token}`
