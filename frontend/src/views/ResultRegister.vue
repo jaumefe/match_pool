@@ -4,15 +4,16 @@ import RegisterTeamSelect from '../components/RegisterTeamSelect.vue'
 import RegisterStageSelect from '../components/RegisterStageSelect.vue'
 import RegisterScorerSelect from '../components/RegisterScorerSelect.vue'
 import { submitRegisterMatch, registerScorerMatch } from '../services/result_register.js'
+import RegisterPenaltyWinnerSelect from '../components/RegisterPenaltyWinnerSelect.vue'
 
 const Stage = ref(null)
 const TeamHome = ref(null)
 const TeamAway = ref(null)
+const PenaltyWinner = ref(null)
 const Scorer = ref(null)
 const formData = ref({
   scoreHome: 0,
   scoreAway: 0,
-  penaltyWinner: null,
   goals: 0
 })
 const error = ref('')
@@ -34,7 +35,7 @@ async function submitResult(){
           teamAwayId: TeamAway.value?.id,
           teamHomeScore: formData.value.scoreHome,
           teamAwayScore: formData.value.scoreAway,
-          penaltyWinnerId: formData.value.penaltyWinner?.id || null
+          penaltyWinnerId: PenaltyWinner.value?.id || null
       })
   } catch (err) {
       error.value = 'Error registering match'
@@ -66,6 +67,7 @@ async function submitScorers(){
       <div><input name="scoreHome" :value="formData.scoreHome" @input="onInput" placeholder="Home Goals"></input></div>
       <div class="column"><RegisterTeamSelect v-model="TeamAway" class="mb-4" /></div>
       <div><input name="scoreAway" :value="formData.scoreAway" @input="onInput" placeholder="Away Goals"></input></div>
+      <div class="column"><RegisterPenaltyWinnerSelect v-model="PenaltyWinner" :team-home="TeamHome" :team-away="TeamAway" class="mb-4"/></div>
     </div>
   <p><button @click="submitResult">Confirmar partit</button></p>
   <h2>Registrar golejadors</h2>
