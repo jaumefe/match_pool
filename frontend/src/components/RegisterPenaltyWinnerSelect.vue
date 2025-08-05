@@ -21,7 +21,7 @@ const props = defineProps({
     },
     placeHolder: {
         type: String,
-        default: 'Selecciona un equip'
+        default: 'Penaltis?'
     }
 })
 const emit = defineEmits(['update:modelValue'])

@@ -86,7 +86,7 @@ async function submitScorers(){
 }
 
 .column {
-  flex: 1 1 calc(20% - 10px); /* 5 columnas por fila */
+  flex: 1 1 calc(16.67% - 10px); /* 5 columnas por fila */
   box-sizing: border-box;
   padding: 10px;
   text-align: center;
