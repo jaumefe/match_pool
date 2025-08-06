@@ -19,7 +19,7 @@ func GetTeams(c *gin.Context) {
 	var teams []models.Team
 	for rows.Next() {
 		var team models.Team
-		if err := rows.Scan(&team.ID, &team.Name, &team.GroupName, &team.Value, &team.EliminatedAt, &team.PoolGroup); err != nil {
+		if err := rows.Scan(&team.ID, &team.Name, &team.GroupName, &team.Value, &team.PoolPostion, &team.PoolGroup); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to scan team"})
 			return
 		}
@@ -42,7 +42,7 @@ func GetTeamsByGroup(c *gin.Context) {
 	var teams []models.Team
 	for rows.Next() {
 		var team models.Team
-		if err := rows.Scan(&team.ID, &team.Name, &team.GroupName, &team.Value, &team.EliminatedAt, &team.PoolGroup); err != nil {
+		if err := rows.Scan(&team.ID, &team.Name, &team.GroupName, &team.Value, &team.PoolPostion, &team.PoolGroup); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to scan team"})
 			return
 		}
@@ -50,4 +50,31 @@ func GetTeamsByGroup(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, teams)
+}
+
+func SetPoolPosition(c *gin.Context) {
+	role, ok := c.Get("role")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "role not found in context"})
+		return
+	}
+
+	if role != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Not authorized to register matches"})
+		return
+	}
+
+	var input models.Team
+	if err := c.BindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+
+	_, err := db.DB.Exec(SET_POOL_POSITION_TEAM, input.PoolPostion, input.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update pool position"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Pool position updated successfully"})
 }

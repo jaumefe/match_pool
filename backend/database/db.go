@@ -48,7 +48,7 @@ func createTables() error {
 			name TEXT NOT NULL,
 			group_name TEXT NOT NULL,
 			value INTEGER NOT NULL,
-			eliminated_at TEXT,
+			pool_position INTEGER,
 			pool_group TEXT
 		);`,
 

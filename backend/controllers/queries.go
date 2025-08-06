@@ -119,4 +119,10 @@ const (
 								id
 								FROM match
 								WHERE team_home_id = ? AND team_away_id = ? AND stage_id = ?`
+	SET_POOL_POSITION_TEAM = `UPDATE teams 
+								SET pool_position = ?
+								WHERE id = ?;`
+	GET_POOL_POSITION_TEAM_ID = `SELECT pool_position
+								FROM teams
+								WHERE id = ?;`
 )

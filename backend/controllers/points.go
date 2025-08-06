@@ -107,7 +107,6 @@ func computePointsTeams(teams []models.Team) (int, error) {
 		if err != nil {
 			return 0, err
 		}
-		defer rows.Close()
 
 		var input struct {
 			stageID         int
@@ -136,6 +135,22 @@ func computePointsTeams(teams []models.Team) (int, error) {
 				} else if input.teamHomeScore == input.teamAwayScore {
 					points++
 				}
+			}
+		}
+		rows.Close()
+
+		var pool_position sql.NullInt16
+		row := db.DB.QueryRow(GET_POOL_POSITION_TEAM_ID, team.ID)
+		if err := row.Scan(&pool_position); err != nil {
+			return 0, err
+		}
+
+		if pool_position.Valid {
+			switch pool_position.Int16 {
+			case 1:
+				points += 2
+			case 2:
+				points++
 			}
 		}
 	}
