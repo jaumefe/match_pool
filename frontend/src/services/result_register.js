@@ -60,3 +60,27 @@ export async function registerScorerMatch(scorerData){
         throw error
     }
 }
+
+export async function submitTeamPosition(positionData){
+    const token = getToken()
+    if (!token) {
+        throw new Error("User not authenticated")
+    }
+
+    try {
+        const response = await axios.post(`${API_URL}/teams/pool_position`, 
+            {
+                'id': positionData.id,
+                'pool_position': positionData.poolPosition
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+        return response.data
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}

@@ -3,18 +3,20 @@ import { ref } from 'vue'
 import RegisterTeamSelect from '../components/RegisterTeamSelect.vue'
 import RegisterStageSelect from '../components/RegisterStageSelect.vue'
 import RegisterScorerSelect from '../components/RegisterScorerSelect.vue'
-import { submitRegisterMatch, registerScorerMatch } from '../services/result_register.js'
+import { submitRegisterMatch, registerScorerMatch, submitTeamPosition } from '../services/result_register.js'
 import RegisterPenaltyWinnerSelect from '../components/RegisterPenaltyWinnerSelect.vue'
 
 const Stage = ref(null)
 const TeamHome = ref(null)
 const TeamAway = ref(null)
+const Team = ref(null)
 const PenaltyWinner = ref(null)
 const Scorer = ref(null)
 const formData = ref({
   scoreHome: 0,
   scoreAway: 0,
-  goals: 0
+  goals: 0,
+  position: 0
 })
 const error = ref('')
 
@@ -57,6 +59,18 @@ async function submitScorers(){
   }
 }
 
+async function submitPosition(){
+  error.value = ''
+  try {
+      await submitTeamPosition({
+          id: Team.value?.id,
+          poolPosition: formData.value.position
+      })
+  } catch (err) {
+      error.value = 'Error registering match'
+  }
+}
+
 </script>
 
 <template>
@@ -75,7 +89,13 @@ async function submitScorers(){
       <div class="column"><RegisterScorerSelect v-model="Scorer" :team-home-id="TeamHome?.id" :team-away-id="TeamAway?.id" class="mb-4" /></div>
       <div><input name="goals" :value="formData.goals" @input="onInput" placeholder="Goals"></input></div>
     </div>
-<p><button @click="submitScorers">Confirmar golejador</button></p>
+  <p><button @click="submitScorers">Confirmar golejador</button></p>
+  <h2>Posició fase de grups</h2>
+    <div class="container">
+      <div class="column"><RegisterTeamSelect v-model="Team" class="mb-4" /></div>
+      <div><input name="position" :value="formData.position" @input="onInput" placeholder="Posició fase de grups"></input></div>
+    </div>
+    <p><button @click="submitPosition">Confirmar posición</button></p>
 </template>
 
 <style scoped>
@@ -86,7 +106,7 @@ async function submitScorers(){
 }
 
 .column {
-  flex: 1 1 calc(16.67% - 10px); /* 5 columnas por fila */
+  flex: 1 1 calc(16.67% - 10px); /* 6 columnas por fila */
   box-sizing: border-box;
   padding: 10px;
   text-align: center;
