@@ -1,7 +1,5 @@
 package models
 
-import "database/sql"
-
 type Match struct {
 	TieID         int    `json:"tie_id"`
 	Leg           int    `json:"leg"`
@@ -14,12 +12,12 @@ type Match struct {
 }
 
 type MatchById struct {
-	TieID           int           `json:"tie_id"`
-	Leg             int           `json:"leg"`
-	StageID         int           `json:"stage_id"`
-	TeamHomeID      int           `json:"team_home_id"`
-	TeamAwayID      int           `json:"team_away_id"`
-	TeamHomeScore   int           `json:"team_home_score"`
-	TeamAwayScore   int           `json:"team_away_score"`
-	PenaltyWinnerID sql.NullInt64 `json:"penalty_winner_id"`
+	TieID           int  `json:"tie_id"`
+	Leg             int  `json:"leg"`
+	StageID         int  `json:"stage_id"`
+	TeamHomeID      int  `json:"team_home_id"`
+	TeamAwayID      int  `json:"team_away_id"`
+	TeamHomeScore   int  `json:"team_home_score"`
+	TeamAwayScore   int  `json:"team_away_score"`
+	PenaltyWinnerID *int `json:"penalty_winner_id"`
 }
