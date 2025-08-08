@@ -36,6 +36,7 @@ func GetPointsAllUsers(c *gin.Context) {
 	pointsTeamsUser := make(map[string]int, len(users))
 	pointsScorerUser := make(map[string]int, len(users))
 	pointsUser := make(map[string]int, len(users))
+	result := make(map[string]map[string]int, len(users))
 	for _, user := range users {
 		var teams []models.Team
 		rows, err := db.DB.Query(GET_USER_TEAMS_QUERY_NO_VALUE, user.ID)
@@ -81,8 +82,13 @@ func GetPointsAllUsers(c *gin.Context) {
 			return
 		}
 		pointsUser[user.Name] = pointsTeamsUser[user.Name] + pointsScorerUser[user.Name]
+		result[user.Name] = map[string]int{
+			"teams":   pointsTeamsUser[user.Name],
+			"scorers": pointsScorerUser[user.Name],
+			"total":   pointsUser[user.Name],
+		}
 	}
-	c.JSON(http.StatusOK, pointsUser)
+	c.JSON(http.StatusOK, result)
 }
 
 func computePointsTeams(teams []models.Team) (int, error) {
