@@ -123,6 +123,8 @@ func computePointsTeams(teams []models.Team) (int, error) {
 
 			if input.penaltyWinnerID.Valid && int(input.penaltyWinnerID.Int16) == team.ID {
 				points += pointsPerStage[input.stageID]
+			} else if input.penaltyWinnerID.Valid && int(input.penaltyWinnerID.Int16) != team.ID {
+				continue
 			} else if input.teamHomeID == team.ID {
 				if input.teamHomeScore > input.teamAwayScore {
 					points += pointsPerStage[input.stageID]
