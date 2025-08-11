@@ -125,4 +125,8 @@ const (
 	GET_POOL_POSITION_TEAM_ID = `SELECT pool_position
 								FROM teams
 								WHERE id = ?;`
+	INSERT_TEAMS_FROM_CSV = `INSERT INTO teams (
+							name, group_name, value, pool_group
+							)
+							VALUES (?, ?, ?, ?);`
 )
