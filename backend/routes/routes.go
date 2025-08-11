@@ -36,4 +36,5 @@ func SetUpRoutes(r *gin.Engine) {
 	r.POST("/match/id", middleware.JWTMiddleware(), controllers.GetMatchId)
 	r.POST("/teams/pool_position", middleware.JWTMiddleware(), controllers.SetPoolPosition)
 	r.POST("/register/teams", middleware.JWTMiddleware(), controllers.RegisterTeamsFromCsv)
+	r.POST("/register/scorers", middleware.JWTMiddleware(), controllers.RegisterScorersFromCsv)
 }

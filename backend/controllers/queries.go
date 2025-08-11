@@ -129,4 +129,9 @@ const (
 							name, group_name, value, pool_group
 							)
 							VALUES (?, ?, ?, ?);`
+	INSERT_SCORERS_FROM_CSV = `INSERT INTO scorers (
+								name, team_id, position
+								)
+								VALUES (?, ?, ?);`
+	GET_TEAM_ID_BY_NAME = `SELECT id FROM teams WHERE name = ?;`
 )
