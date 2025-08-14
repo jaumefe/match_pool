@@ -13,8 +13,6 @@ async function submit() {
   error.value = ''
   try  {
     const result = await login(user.value, password.value)
-    // Handle successful login
-    console.log('Login successful')
     router.push('/pool')
   } catch (err) {
     error.value = err.message

@@ -5,15 +5,13 @@ export const API_URL = 'http://localhost:5050'
 const TOKEN_COOKIE = 'jwt'
 const ONE_DAY = 1
 
-/*
-Login function to authenticate a user.
-*/
 export async function login(username, password) {
     try {
         const response = await axios.post(`${API_URL}/login`, { 'name': username, 'password': password })
         const token = response.data.bearer
-        console.log(`token: ${token}`)
+        const role = response.data.role
         Cookies.set(TOKEN_COOKIE, token, { expires: ONE_DAY })
+        localStorage.setItem('role', role)
 
         return {token, message: response.data.message}
     } catch (error) {
@@ -24,11 +22,11 @@ export async function login(username, password) {
     }
 }
 
-
 export function getToken () {
   return Cookies.get(TOKEN_COOKIE) || null
 }
 
-export function logout () {
+export async function removeToken () {
   Cookies.remove(TOKEN_COOKIE)
+  localStorage.removeItem('role')
 }
