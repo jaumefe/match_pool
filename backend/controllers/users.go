@@ -88,5 +88,5 @@ func LoginUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate JWT"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "bearer": jwt})
+	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "bearer": jwt, "role": role})
 }
