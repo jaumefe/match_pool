@@ -95,7 +95,7 @@ async function submitPosition(){
       <div class="column"><RegisterTeamSelect v-model="Team" class="mb-4" /></div>
       <div><input name="position" :value="formData.position" @input="onInput" placeholder="Posició fase de grups"></input></div>
     </div>
-    <p><button @click="submitPosition">Confirmar posición</button></p>
+    <p><button @click="submitPosition">Confirmar posició</button></p>
 </template>
 
 <style scoped>
