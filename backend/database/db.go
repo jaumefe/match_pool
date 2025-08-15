@@ -2,8 +2,10 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var DB *sql.DB
@@ -18,6 +20,24 @@ func InitDB(dataSource string) error {
 	// Create tables if they do not exist
 	if err := createTables(); err != nil {
 		return err
+	}
+
+	// Create initial user admin in case there are no admins on the game
+	rows, err := DB.Query("SELECT * FROM users;")
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	if !rows.Next() {
+		name := "admin"
+		passwd, err := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
+		if err != nil {
+			return err
+		}
+		role := "admin"
+
+		DB.Exec(`INSERT INTO users (name, token, role) VALUES (?, ?, ?);`, name, passwd, role)
 	}
 
 	return nil
@@ -109,6 +129,7 @@ func createTables() error {
 
 	for _, q := range queries {
 		if _, err := DB.Exec(q); err != nil {
+			fmt.Println(q, err)
 			return err
 		}
 	}

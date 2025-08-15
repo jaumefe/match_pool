@@ -1,7 +1,11 @@
 package controllers
 
 const (
-	MAX_POINTS             = 33
+	MAX_POINTS          = 33
+	CREATE_DEFAULT_USER = `INSERT INTO users (
+							name, token, role
+							)
+							VALUES (?, ?, ?);`
 	PRAGMA_FOREIGN_KEYS_ON = "PRAGMA foreign_keys = ON"
 	SCORERS_QUERY          = `SELECT
 						scorers.id,
