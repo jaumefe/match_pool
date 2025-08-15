@@ -65,7 +65,7 @@ func createTables() error {
 
 		`CREATE TABLE IF NOT EXISTS teams (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT NOT NULL,
+			name TEXT NOT NULL UNIQUE,
 			group_name TEXT NOT NULL,
 			value INTEGER NOT NULL,
 			pool_position INTEGER,
@@ -74,7 +74,7 @@ func createTables() error {
 
 		`CREATE TABLE IF NOT EXISTS users (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT NOT NULL,
+			name TEXT NOT NULL UNIQUE,
 			token TEXT NOT NULL,
 			role TEXT NOT NULL DEFAULT 'user',
 			score INTEGER DEFAULT 0
@@ -90,13 +90,13 @@ func createTables() error {
 
 		`CREATE TABLE IF NOT EXISTS stage (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT NOT NULL,
+			name TEXT NOT NULL UNIQUE,
 			points_win INTEGER NOT NULL DEFAULT 3
 		);`,
 
 		`CREATE TABLE IF NOT EXISTS scorers (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT NOT NULL,
+			name TEXT NOT NULL UNIQUE,
 			team_id INTEGER NOT NULL,
 			position TEXT NOT NULL,
 			FOREIGN KEY (team_id) REFERENCES teams(id)
