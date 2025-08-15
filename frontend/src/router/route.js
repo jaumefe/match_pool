@@ -6,6 +6,7 @@ import ResultRegister from '../views/ResultRegister.vue'
 import Points from '../views/Points.vue'
 import MainLayout from '../layouts/MainLayout.vue'
 import { getToken } from '../services/auth'
+import UserRegister from '../views/UserRegister.vue'
 
 const routes = [
   {
@@ -24,7 +25,8 @@ const routes = [
     children: [
       {path: 'pool', name: 'Pool', component: Pool},
       {path: 'result_register', name: 'Register', component: ResultRegister},
-      {path: 'points', name: 'Points', component: Points}
+      {path: 'points', name: 'Points', component: Points},
+      {path: 'register_user', name: 'Register User', component: UserRegister}
     ],
     meta: { requiresAuth: true }
   }

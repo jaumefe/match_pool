@@ -1,0 +1,27 @@
+import axios from 'axios'
+import { getToken, API_URL } from './auth'
+
+export async function submitUser(data){
+    const token = getToken()
+    if (!token) {
+        throw new Error("User not authenticated")
+    }
+    try {
+        const response = await axios.post(`${API_URL}/users`,
+            {
+                'name': data.name,
+                'password': data.passwd,
+                'role': data.role
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        return response.data
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
