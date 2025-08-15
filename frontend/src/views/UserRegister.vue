@@ -49,7 +49,7 @@ async function registerUser(){
             <input type="password" v-model="formData.passwdConf" placeholder="Confirma contrasenya"></input>
             <p v-if="!passOK">La contrasenya no és idèntica</p>
         </div>
-        <div><Select v-model="formData.role" :options="role" optionLabel="name" placeholder="Selecciona un rol" class="w-full md:w-56" /></div>
+        <div><Select v-model="formData.role" :options="role" optionLabel="name" optionValue="short" placeholder="Selecciona un rol" class="w-full md:w-56" /></div>
         <div v-if="registerReady"><button @click="registerUser">Registrar usuari</button></div>
     </div>
 
