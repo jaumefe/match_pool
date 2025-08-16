@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { getUserName, updateUserName } from '../services/users';
+import { getUserName, updateUserName, updatePasswd } from '../services/users';
 
 const error = ref('')
 const name = ref('')
@@ -31,6 +31,17 @@ async function changeName(){
         })
     } catch (err) {
         error.value = 'Error updating name'
+    }
+}
+
+async function changePass(){
+    error.value = ''
+    try {
+        await updatePasswd({
+            token: formData.value.newPass
+        })
+    } catch (err) {
+        error.value = 'Error updating password'
     }
 }
 

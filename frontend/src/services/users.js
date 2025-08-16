@@ -71,3 +71,27 @@ export async function getUserName(){
         throw error
     }
 }
+
+export async function updatePasswd(data) {
+    const token = getToken()
+    if (!token) {
+        throw new Error("User not authenticated")
+    }
+
+    try {
+        const response = await axios.post(`${API_URL}/users/pass`,
+            {
+                'token': data.token,
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        return response.data
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
