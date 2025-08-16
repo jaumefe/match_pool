@@ -129,3 +129,31 @@ func GetUserName(c *gin.Context) {
 
 	c.JSON(http.StatusOK, name)
 }
+
+func UpdateUserPass(c *gin.Context) {
+	id, ok := c.Get("user_id")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id not found in context"})
+		return
+	}
+
+	var input models.User
+	if err := c.BindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(input.Token), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+		return
+	}
+
+	_, err = db.DB.Exec(UPDATE_USER_PASS, hash, id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update pass"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "user password successfully updated"})
+}

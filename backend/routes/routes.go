@@ -28,6 +28,7 @@ func SetUpRoutes(r *gin.Engine) {
 
 	r.POST("/users", middleware.JWTMiddleware(), controllers.RegisterUser)
 	r.POST("/users/name", middleware.JWTMiddleware(), controllers.UpdateName)
+	r.POST("/users/pass", middleware.JWTMiddleware(), controllers.UpdateUserPass)
 	r.POST("/login", controllers.LoginUser)
 	r.POST("/pool/teams", middleware.JWTMiddleware(), controllers.SubmitTeamsUser)
 	r.POST("/pool/scorers", middleware.JWTMiddleware(), controllers.SubmitScorersUser)
