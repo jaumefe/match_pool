@@ -23,10 +23,12 @@ async function logout() {
 <template>
   <div>
     <nav>
+      <router-link to="/profile">Perfil</router-link>
       <router-link to="/pool">Porra</router-link>
       <router-link to="/points">Classificació</router-link>
       <router-link v-if="isAdmin" to="/result_register">Registrar partis/gols</router-link>
       <router-link v-if="isAdmin" to="/register_user">Registrar usuaris</router-link>
+
       <button @click="logout">Logout</button>
     </nav>
     <main>

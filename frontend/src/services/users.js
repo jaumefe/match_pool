@@ -25,3 +25,28 @@ export async function submitUser(data){
         throw error
     }
 }
+
+export async function updateUserName(data){
+    const token = getToken()
+    if (!token) {
+        throw new Error("User not authenticated")
+    }
+
+    try {
+        const response = await axios.post(`${API_URL}/users/name`,
+            {
+                'name': data.name,
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        return response.data
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+    
+}

@@ -7,6 +7,7 @@ import Points from '../views/Points.vue'
 import MainLayout from '../layouts/MainLayout.vue'
 import { getToken } from '../services/auth'
 import UserRegister from '../views/UserRegister.vue'
+import Profile from '../views/Profile.vue'
 
 const routes = [
   {
@@ -26,7 +27,8 @@ const routes = [
       {path: 'pool', name: 'Pool', component: Pool},
       {path: 'result_register', name: 'Register', component: ResultRegister},
       {path: 'points', name: 'Points', component: Points},
-      {path: 'register_user', name: 'Register User', component: UserRegister}
+      {path: 'register_user', name: 'Register User', component: UserRegister},
+      {path: 'profile', name: 'Profile', component: Profile}
     ],
     meta: { requiresAuth: true }
   }
