@@ -112,3 +112,20 @@ func UpdateName(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "user name updated successfully"})
 }
+
+func GetUserName(c *gin.Context) {
+	id, ok := c.Get("user_id")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id not found in context"})
+		return
+	}
+
+	var name string
+	row := db.DB.QueryRow(GET_USER_NAME, id)
+	if err := row.Scan(&name); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "unable to get user name"})
+		return
+	}
+
+	c.JSON(http.StatusOK, name)
+}

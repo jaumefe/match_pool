@@ -50,3 +50,24 @@ export async function updateUserName(data){
     }
     
 }
+
+export async function getUserName(){
+    const token = getToken()
+    if (!token) {
+        throw new Error("User not authenticated")
+    }
+
+    try {
+        const response = await axios.get(`${API_URL}/users/name`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        return response.data
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}

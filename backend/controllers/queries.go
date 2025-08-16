@@ -141,4 +141,5 @@ const (
 	UPDATE_USER_NAME    = `UPDATE users
 							SET name = ?
 							WHERE id = ?;`
+	GET_USER_NAME = `SELECT name FROM users WHERE id = ?`
 )
