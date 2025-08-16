@@ -3,6 +3,7 @@ package controllers
 import (
 	"match_pool_back/auth"
 	db "match_pool_back/database"
+	"match_pool_back/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -89,4 +90,25 @@ func LoginUser(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "bearer": jwt, "role": role})
+}
+
+func UpdateName(c *gin.Context) {
+	id, ok := c.Get("user_id")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id not found in context"})
+		return
+	}
+
+	var input models.User
+	if err := c.BindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+
+	_, err := db.DB.Exec(UPDATE_USER_NAME, input.Name, id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user name"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "user name updated successfully"})
 }

@@ -138,4 +138,7 @@ const (
 								)
 								VALUES (?, ?, ?);`
 	GET_TEAM_ID_BY_NAME = `SELECT id FROM teams WHERE name = ?;`
+	UPDATE_USER_NAME    = `UPDATE users
+							SET name = ?
+							WHERE id = ?;`
 )
