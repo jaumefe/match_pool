@@ -28,7 +28,7 @@ async function logout() {
       <router-link to="/points">Classificació</router-link>
       <router-link v-if="isAdmin" to="/result_register">Registrar partis/gols</router-link>
       <router-link v-if="isAdmin" to="/register_user">Registrar usuaris</router-link>
-
+      <router-link v-if="isAdmin" to="/configuration">Configuració</router-link>
       <button @click="logout">Logout</button>
     </nav>
     <main>

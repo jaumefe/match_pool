@@ -8,6 +8,7 @@ import MainLayout from '../layouts/MainLayout.vue'
 import { getToken } from '../services/auth'
 import UserRegister from '../views/UserRegister.vue'
 import Profile from '../views/Profile.vue'
+import Configuration from '../views/Configuration.vue'
 
 const routes = [
   {
@@ -28,7 +29,8 @@ const routes = [
       {path: 'result_register', name: 'Register', component: ResultRegister},
       {path: 'points', name: 'Points', component: Points},
       {path: 'register_user', name: 'Register User', component: UserRegister},
-      {path: 'profile', name: 'Profile', component: Profile}
+      {path: 'profile', name: 'Profile', component: Profile},
+      {path: 'configuration', name: 'Configuration', component: Configuration}
     ],
     meta: { requiresAuth: true }
   }
