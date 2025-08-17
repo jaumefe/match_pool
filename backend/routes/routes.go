@@ -23,7 +23,8 @@ func SetUpRoutes(r *gin.Engine) {
 	r.GET("/pool/teams", middleware.JWTMiddleware(), controllers.GetTeamsByUser)
 	r.GET("/pool/scorers", middleware.JWTMiddleware(), controllers.GetScorerByUser)
 	r.GET("/pool/points", middleware.JWTMiddleware(), controllers.GetPointsAllUsers)
-	r.GET("/stages", controllers.GetStages)
+	r.GET("/stages", controllers.GetStagesName)
+	r.GET("/stages/points", controllers.GetStagesNameAndPoints)
 	r.GET("/users/name", middleware.JWTMiddleware(), controllers.GetUserName)
 
 	r.POST("/users", middleware.JWTMiddleware(), controllers.RegisterUser)
@@ -40,4 +41,5 @@ func SetUpRoutes(r *gin.Engine) {
 	r.POST("/teams/pool_position", middleware.JWTMiddleware(), controllers.SetPoolPosition)
 	r.POST("/register/teams", middleware.JWTMiddleware(), controllers.RegisterTeamsFromCsv)
 	r.POST("/register/scorers", middleware.JWTMiddleware(), controllers.RegisterScorersFromCsv)
+	r.POST("/configuration/stage", middleware.JWTMiddleware(), controllers.SetStagePointsWin)
 }

@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
@@ -129,7 +128,6 @@ func createTables() error {
 
 	for _, q := range queries {
 		if _, err := DB.Exec(q); err != nil {
-			fmt.Println(q, err)
 			return err
 		}
 	}

@@ -141,8 +141,13 @@ const (
 	UPDATE_USER_NAME    = `UPDATE users
 							SET name = ?
 							WHERE id = ?;`
-	GET_USER_NAME    = `SELECT name FROM users WHERE id = ?`
+	GET_USER_NAME    = `SELECT name FROM users WHERE id = ?;`
 	UPDATE_USER_PASS = `UPDATE users
 						SET token = ?
-						WHERE id = ?`
+						WHERE id = ?;`
+	GET_STAGES_NAME_POINTS      = `SELECT name, points_win FROM stage;`
+	SET_STAGES_WIN_POINTS_STAGE = `INSERT INTO stage (
+									name, points_win
+									)
+									VALUES (?, ?);`
 )
