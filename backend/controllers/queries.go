@@ -145,9 +145,17 @@ const (
 	UPDATE_USER_PASS = `UPDATE users
 						SET token = ?
 						WHERE id = ?;`
-	GET_STAGES_NAME_POINTS      = `SELECT name, points_win FROM stage;`
+	GET_STAGES_NAME_POINTS      = `SELECT id, name, points_win FROM stage;`
 	SET_STAGES_WIN_POINTS_STAGE = `INSERT INTO stage (
 									name, points_win
 									)
 									VALUES (?, ?);`
+	GET_POINTS_GOAL_PER_STAGE = `SELECT
+								points_goals.pointsPerGoal, stage.name
+								FROM points_goals
+								JOIN stage ON points_goals.stage_id = stage.id;`
+	SET_POINTS_GOAL_PER_STAGE = `INSERT INTO points_goals (
+									pointsPerGoal, stage_id
+								)
+								VALUES (?, ?);`
 )

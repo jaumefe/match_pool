@@ -121,7 +121,7 @@ func createTables() error {
 		`CREATE TABLE IF NOT EXISTS points_goals (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			pointsPerGoal INTEGER NOT NULL DEFAULT 1,
-			stage_id INTEGER NOT NULL,
+			stage_id INTEGER NOT NULL UNIQUE,
 			FOREIGN KEY (stage_id) REFERENCES stage(id)
 		);`,
 	}
