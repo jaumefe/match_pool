@@ -1,13 +1,17 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getStagesPoints, submitStagePoints } from '../services/stage';
+import { getGoalsPointsPerStage, getStagesPoints, submitGoalsPointsPerStage, submitStagePoints } from '../services/configuration';
+import Select from 'primevue/select';
 
 
 const error = ref('')
 const stages = ref(null)
+const pointsGoalStage = ref(null)
 const formData = ref({
     stage: '',
-    stagePoints: ''
+    stagePoints: 0,
+    stageGoal: '',
+    goalPoints: 0
 })
 
 async function setStagePoints(){
@@ -18,16 +22,42 @@ async function setStagePoints(){
             points: parseInt(formData.value?.stagePoints, 10)
         })
         await loadStages()
+        await loadGoalsPointsPerStage()
     } catch (err){
         error.value = 'Error setting stage points'
     }
 }
 
 async function loadStages(){
-    error.value = ''
+  error.value = ''
+  try {
+  const data = await getStagesPoints()
+      stages.value = data
+  } catch (err) {
+      error.value = 'Error al cargar los datos'
+      console.log(err)
+    }
+}
+
+async function setGoalsPerStagePoints(){
+  error.value = ''
     try {
-    const data = await getStagesPoints()
-        stages.value = data
+      const data = await submitGoalsPointsPerStage({
+        points_per_goal: parseInt(formData.value?.goalPoints, 10),
+        stage_id: formData.value?.stageGoal
+      })
+      await loadGoalsPointsPerStage()
+    } catch (err) {
+        error.value = 'Error al cargar los datos'
+        console.log(err)
+    }
+}
+
+async function loadGoalsPointsPerStage(){
+  error.value = ''
+    try {
+    const data = await getGoalsPointsPerStage()
+        pointsGoalStage.value = data
     } catch (err) {
         error.value = 'Error al cargar los datos'
         console.log(err)
@@ -35,7 +65,8 @@ async function loadStages(){
 }
 
 onMounted(() => {
-  loadStages()
+  loadStages(),
+  loadGoalsPointsPerStage()
 })
 </script>
 
@@ -62,8 +93,26 @@ onMounted(() => {
       </tbody>
     </table>
     <h3>Punts per gol</h3>
-    <h3></h3>
-</template>
+    <p>
+      <Select v-model="formData.stageGoal" :options="stages" optionLabel="name" optionValue="id" placeholder="Nom de la fase"></Select>
+        Punts: <input v-model="formData.goalPoints" placeholder="Punts per gol"></input>
+        <button @click="setGoalsPerStagePoints">Confirmar</button>
+      </p>
+      <table>
+      <thead>
+        <tr>
+          <th>Tipus d'eliminatòria</th>
+          <th>Punts per gol</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="pgs in pointsGoalStage" :key="pgs.stage">
+          <td>{{ pgs.stage }}</td>
+          <td>{{ pgs.points_per_goal }}</td>
+        </tr>
+      </tbody>
+    </table>
+    </template>
 
 <style scoped>
 table {
