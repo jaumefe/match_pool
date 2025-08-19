@@ -158,4 +158,8 @@ const (
 									pointsPerGoal, stage_id
 								)
 								VALUES (?, ?);`
+	GET_CONFIGURATION = `SELECT key, value FROM config;`
+	SET_CONFIGURATION = `UPDATE config
+						SET value = ?
+						WHERE key = ?;`
 )

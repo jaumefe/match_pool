@@ -27,6 +27,7 @@ func SetUpRoutes(r *gin.Engine) {
 	r.GET("/stages/points", controllers.GetStagesNameAndPoints)
 	r.GET("/users/name", middleware.JWTMiddleware(), controllers.GetUserName)
 	r.GET("/goals/stage", middleware.JWTMiddleware(), middleware.IsAdminMiddleware(), controllers.GetPointsGoalPerStage)
+	r.GET("/configuration", middleware.JWTMiddleware(), controllers.GetConfiguration)
 
 	r.POST("/users", middleware.JWTMiddleware(), middleware.IsAdminMiddleware(), controllers.RegisterUser)
 	r.POST("/users/name", middleware.JWTMiddleware(), controllers.UpdateName)
@@ -44,4 +45,5 @@ func SetUpRoutes(r *gin.Engine) {
 	r.POST("/register/scorers", middleware.JWTMiddleware(), middleware.IsAdminMiddleware(), controllers.RegisterScorersFromCsv)
 	r.POST("/configuration/stage", middleware.JWTMiddleware(), middleware.IsAdminMiddleware(), controllers.SetStagePointsWin)
 	r.POST("/configuration/goals", middleware.JWTMiddleware(), middleware.IsAdminMiddleware(), controllers.SetPointsGoalPerStage)
+	r.POST("/configuration", middleware.JWTMiddleware(), middleware.IsAdminMiddleware(), controllers.SetConfiguration)
 }

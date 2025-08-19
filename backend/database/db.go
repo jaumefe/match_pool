@@ -26,7 +26,6 @@ func InitDB(dataSource string) error {
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
 
 	if !rows.Next() {
 		name := "admin"
@@ -36,9 +35,29 @@ func InitDB(dataSource string) error {
 		}
 		role := "admin"
 
-		DB.Exec(`INSERT INTO users (name, token, role) VALUES (?, ?, ?);`, name, passwd, role)
+		_, err = DB.Exec(`INSERT INTO users (name, token, role) VALUES (?, ?, ?);`, name, passwd, role)
+		if err != nil {
+			return err
+		}
 	}
+	rows.Close()
 
+	// Create configuration table
+	rows, err = DB.Query("SELECT * FROM config;")
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	if !rows.Next() {
+		keys := []string{"max_points", "first_pool_position", "second_pool_position", "limit_date"}
+		for _, key := range keys {
+			_, err := DB.Exec("INSERT INTO config (key) VALUES (?);", key)
+			if err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
 
@@ -123,6 +142,10 @@ func createTables() error {
 			pointsPerGoal INTEGER NOT NULL DEFAULT 1,
 			stage_id INTEGER NOT NULL UNIQUE,
 			FOREIGN KEY (stage_id) REFERENCES stage(id)
+		);`,
+		`CREATE TABLE IF NOT EXISTS config (
+			key TEXT PRIMARY KEY,
+			value TEXT
 		);`,
 	}
 
