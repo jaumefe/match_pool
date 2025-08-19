@@ -56,7 +56,7 @@ export async function getGoalsPointsPerStage() {
 }
 
 export async function submitGoalsPointsPerStage(data){
-     const token = getToken()
+    const token = getToken()
     if (!token) {
         throw new Error("User not authenticated")
     }
@@ -65,6 +65,50 @@ export async function submitGoalsPointsPerStage(data){
             {
                 'points_per_goal': data.points_per_goal,
                 'stage_id': data.stage_id
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        return response.data
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function getConfiguration() {
+    const token = getToken()
+    if (!token) {
+        throw new Error("User not authenticated")
+    }
+    try {
+        const response = await axios.get(`${API_URL}/configuration`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        return response.data
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function setConfiguration(config) {
+    const token = getToken()
+    if (!token) {
+        throw new Error("User not authenticated")
+    }
+    try {
+        const response = await axios.post(`${API_URL}/configuration`,
+            {
+                'key': config.key,
+                'value': config.value
             },
             {
                 headers: {

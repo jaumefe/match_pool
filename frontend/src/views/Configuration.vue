@@ -1,12 +1,13 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getGoalsPointsPerStage, getStagesPoints, submitGoalsPointsPerStage, submitStagePoints } from '../services/configuration';
+import { getConfiguration, getGoalsPointsPerStage, getStagesPoints, setConfiguration, submitGoalsPointsPerStage, submitStagePoints } from '../services/configuration';
 import Select from 'primevue/select';
 
 
 const error = ref('')
 const stages = ref(null)
 const pointsGoalStage = ref(null)
+const configuration = ref(null)
 const formData = ref({
     stage: '',
     stagePoints: 0,
@@ -55,18 +56,41 @@ async function setGoalsPerStagePoints(){
 
 async function loadGoalsPointsPerStage(){
   error.value = ''
-    try {
+  try {
     const data = await getGoalsPointsPerStage()
-        pointsGoalStage.value = data
-    } catch (err) {
-        error.value = 'Error al cargar los datos'
-        console.log(err)
-    }
+    pointsGoalStage.value = data
+  } catch (err) {
+    error.value = 'Error al cargar los datos'
+    console.log(err)
+  }
+}
+
+async function loadConfiguration(){
+  error.value = ''
+  try {
+    const data = await getConfiguration()
+    configuration.value = data
+  } catch (err) {
+    error.value = 'Error al cargar la configuración'
+    console.log(error)
+  }
+}
+
+async function updateConfiguration(config){
+  error.value = ''
+  try {
+    await setConfiguration(config)
+    await loadConfiguration()
+  } catch (err) {
+    error.value = 'Error al actualizar la configuración'
+    console.log(err)
+  }
 }
 
 onMounted(() => {
   loadStages(),
-  loadGoalsPointsPerStage()
+  loadGoalsPointsPerStage(),
+  loadConfiguration()
 })
 </script>
 
@@ -112,7 +136,28 @@ onMounted(() => {
         </tr>
       </tbody>
     </table>
-    </template>
+    <h3>Configuració addicional</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Configuració</th>
+          <th>Valor</th>
+          <th>Nou valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="c in configuration" :key="c.key">
+          <td>{{ c.key }}</td>
+          <td>{{ c.value }}</td>
+          <td>
+            <input v-if="c.key !== 'limit_date'" v-model="c.value" placeholder="Nou valor"></input>
+            <input v-if="c.key === 'limit_date'" v-model="c.value" type="date"></input>
+            <button @click="updateConfiguration(c)">Confirmar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+</template>
 
 <style scoped>
 table {
