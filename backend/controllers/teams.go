@@ -53,17 +53,6 @@ func GetTeamsByGroup(c *gin.Context) {
 }
 
 func SetPoolPosition(c *gin.Context) {
-	role, ok := c.Get("role")
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "role not found in context"})
-		return
-	}
-
-	if role != "admin" {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Not authorized to register matches"})
-		return
-	}
-
 	var input models.Team
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})

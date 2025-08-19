@@ -9,17 +9,6 @@ import (
 )
 
 func RegisterGoals(c *gin.Context) {
-	role, ok := c.Get("role")
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "role not found in context"})
-		return
-	}
-
-	if role != "admin" {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Not authorized to register matches"})
-		return
-	}
-
 	var input models.Goal
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
@@ -42,17 +31,6 @@ func RegisterGoals(c *gin.Context) {
 }
 
 func RegisterGoalsByPlayerID(c *gin.Context) {
-	role, ok := c.Get("role")
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "role not found in context"})
-		return
-	}
-
-	if role != "admin" {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Not authorized to register matches"})
-		return
-	}
-
 	var input models.GoalByPlayerID
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})

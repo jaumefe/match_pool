@@ -9,17 +9,6 @@ import (
 )
 
 func RegisterMatch(c *gin.Context) {
-	role, ok := c.Get("role")
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "role not found in context"})
-		return
-	}
-
-	if role != "admin" {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Not authorized to register matches"})
-		return
-	}
-
 	var input models.Match
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
@@ -46,17 +35,6 @@ func RegisterMatch(c *gin.Context) {
 }
 
 func RegisterMatchById(c *gin.Context) {
-	role, ok := c.Get("role")
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "role not found in context"})
-		return
-	}
-
-	if role != "admin" {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Not authorized to register matches"})
-		return
-	}
-
 	var input models.MatchById
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
@@ -77,17 +55,6 @@ func RegisterMatchById(c *gin.Context) {
 }
 
 func GetMatchId(c *gin.Context) {
-	role, ok := c.Get("role")
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "role not found in context"})
-		return
-	}
-
-	if role != "admin" {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Not authorized to register matches"})
-		return
-	}
-
 	var input models.MatchById
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})

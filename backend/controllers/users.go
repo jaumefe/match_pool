@@ -11,17 +11,6 @@ import (
 )
 
 func RegisterUser(c *gin.Context) {
-	role, ok := c.Get("role")
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "role not found in context"})
-		return
-	}
-
-	if role != "admin" {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Not authorized to register matches"})
-		return
-	}
-
 	var input struct {
 		Name     string `json:"name"`
 		Password string `json:"password"`
