@@ -29,6 +29,7 @@ async function changeName(){
         await updateUserName({
             name: formData.value.name
         })
+        loadName()
     } catch (err) {
         error.value = 'Error updating name'
     }
@@ -45,11 +46,15 @@ async function changePass(){
     }
 }
 
-onMounted(async() => {
+async function loadName(){
     const userName = await getUserName()
-    if (userName) {
-        name.value = userName
-    }
+        if (userName) {
+            name.value = userName
+        }
+}
+
+onMounted(() => {
+    loadName()
 })
 </script>
 
