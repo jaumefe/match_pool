@@ -124,3 +124,14 @@ func SetConfiguration(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "configuration updated successfully"})
 }
+
+func GetMaxPoints(c *gin.Context) {
+	row := db.DB.QueryRow(GET_MAX_POINTS)
+	var maxPoints int
+	if err := row.Scan(&maxPoints); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get max points"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"max_points": maxPoints})
+}

@@ -1,7 +1,7 @@
 package controllers
 
 const (
-	MAX_POINTS          = 33
+	//MAX_POINTS          = 33
 	CREATE_DEFAULT_USER = `INSERT INTO users (
 							name, token, role
 							)
@@ -162,4 +162,5 @@ const (
 	SET_CONFIGURATION = `UPDATE config
 						SET value = ?
 						WHERE key = ?;`
+	GET_MAX_POINTS = `SELECT value FROM config WHERE key = 'max_points';`
 )

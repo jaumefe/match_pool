@@ -38,8 +38,15 @@ func SubmitTeamsUser(c *gin.Context) {
 		return
 	}
 
-	if points > MAX_POINTS {
-		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("User points: %d exceed maximum: %d", points, MAX_POINTS)})
+	row := db.DB.QueryRow(GET_MAX_POINTS)
+	var maxPoints int
+	if err := row.Scan(&maxPoints); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get max points"})
+		return
+	}
+
+	if points > maxPoints {
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("User points: %d exceed maximum: %d", points, maxPoints)})
 		return
 	}
 

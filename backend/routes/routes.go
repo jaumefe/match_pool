@@ -28,6 +28,7 @@ func SetUpRoutes(r *gin.Engine) {
 	r.GET("/users/name", middleware.JWTMiddleware(), controllers.GetUserName)
 	r.GET("/goals/stage", middleware.JWTMiddleware(), middleware.IsAdminMiddleware(), controllers.GetPointsGoalPerStage)
 	r.GET("/configuration", middleware.JWTMiddleware(), controllers.GetConfiguration)
+	r.GET("/configuration/max_points", controllers.GetMaxPoints)
 
 	r.POST("/users", middleware.JWTMiddleware(), middleware.IsAdminMiddleware(), controllers.RegisterUser)
 	r.POST("/users/name", middleware.JWTMiddleware(), controllers.UpdateName)
