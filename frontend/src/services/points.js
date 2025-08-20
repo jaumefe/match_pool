@@ -20,3 +20,13 @@ export async function getPoints(){
         throw error
     }
 }
+
+export async function getMaxPoints(){
+    try {
+        const response = await axios.get(`${API_URL}/configuration/max_points`)
+        return response.data
+    } catch (error){
+        console.log(error)
+        throw error
+    }
+}

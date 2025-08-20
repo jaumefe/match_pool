@@ -4,6 +4,7 @@ import ScorerSelect from '../components/PoolScorerSelect.vue'
 import { ref, onMounted } from 'vue'
 import { submitTeams, getTeamByUser } from '../services/teams.js'
 import { submitScorers, getScorerByUser } from '../services/scorers.js'
+import { getMaxPoints } from '../services/points.js'
 
 const selectedA = ref(null)
 const selectedB1 = ref(null)
@@ -20,6 +21,7 @@ const selectedScorerC2 = ref(null)
 const selectedScorerC3 = ref(null)
 const selectedScorerD1 = ref(null)
 const selectedScorerD2 = ref(null)
+const maxPoints = ref(0)
 const error = ref('')
 
 // Initialize selected teams with values from getTeamByUser
@@ -47,6 +49,10 @@ onMounted(async() => {
     selectedScorerD1.value = userScorers[6]
     selectedScorerD2.value = userScorers[7]
   }
+})
+
+onMounted(() => {
+  loadMaxPoints()
 })
 
 selectedA.value = { value: 0 }
@@ -93,6 +99,16 @@ async function submitScorerUser(){
     error.value = "Error assigning scorers"
   }
 }
+
+async function loadMaxPoints(){
+  error.value = ''
+  try {
+    maxPoints.value = await getMaxPoints()
+  } catch (err) {
+    error.value = 'Error loading maximum points'
+    console.log(err)
+  }
+}
 </script>
 
 <template>
@@ -106,7 +122,7 @@ async function submitScorerUser(){
     <div class="column"><h3>Grup D</h3><TeamSelect v-model="selectedD1" :group-id="4" class="mb-4" /><p> {{ selectedD1.value }}</p></div>
     <div class="column"><h3>Grup D</h3><TeamSelect v-model="selectedD2" :group-id="4" class="mb-4" /><p> {{ selectedD2.value }}</p></div>
   </div>
-  <p>TOTAL: {{ selectedA.value + selectedB1.value + selectedB2.value + selectedC1.value + selectedC2.value + selectedD1.value + selectedD2.value }}</p>
+  <p>TOTAL: {{ selectedA.value + selectedB1.value + selectedB2.value + selectedC1.value + selectedC2.value + selectedD1.value + selectedD2.value }}/{{ maxPoints.max_points }}</p>
   <p><button @click="submitTeamsUser">Confirmar equips</button></p>
   <h2>Escollir golejadors</h2>
   <div class="container">
