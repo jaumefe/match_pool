@@ -18,5 +18,7 @@ func IsAdminMiddleware() gin.HandlerFunc {
 			c.JSON(http.StatusForbidden, gin.H{"error": "Not authorized to register matches"})
 			return
 		}
+
+		c.Next()
 	}
 }
