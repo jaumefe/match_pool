@@ -161,6 +161,8 @@ const (
 	SET_CONFIGURATION = `UPDATE config
 						SET value = ?
 						WHERE key = ?;`
-	GET_MAX_POINTS = `SELECT value FROM config WHERE key = 'max_points';`
-	GET_LIMIT_DATE = `SELECT value FROM config WHERE key = 'limit_date';`
+	GET_MAX_POINTS                  = `SELECT value FROM config WHERE key = 'max_points';`
+	GET_LIMIT_DATE                  = `SELECT value FROM config WHERE key = 'limit_date';`
+	GET_FIRST_POOL_POSITION_POINTS  = `SELECT value FROM config WHERE key = 'first_pool_position'`
+	GET_SECOND_POOL_POSITION_POINTS = `SELECT value FROM config WHERE key = 'second_pool_position'`
 )

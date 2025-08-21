@@ -5,6 +5,7 @@ import (
 	db "match_pool_back/database"
 	"match_pool_back/models"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -147,8 +148,30 @@ func computePointsTeams(teams []models.Team) (int, error) {
 		}
 		rows.Close()
 
+		var firstPoolPoints string
+		row := db.DB.QueryRow(GET_FIRST_POOL_POSITION_POINTS)
+		if err := row.Scan(&firstPoolPoints); err != nil {
+			return 0, err
+		}
+
+		firstPoolPointsInt, err := strconv.Atoi(firstPoolPoints)
+		if err != nil {
+			return 0, err
+		}
+
+		var secondPoolPoints string
+		row = db.DB.QueryRow(GET_SECOND_POOL_POSITION_POINTS)
+		if err := row.Scan(&secondPoolPoints); err != nil {
+			return 0, err
+		}
+
+		secondPoolPointsInt, err := strconv.Atoi(secondPoolPoints)
+		if err != nil {
+			return 0, err
+		}
+
 		var pool_position sql.NullInt16
-		row := db.DB.QueryRow(GET_POOL_POSITION_TEAM_ID, team.ID)
+		row = db.DB.QueryRow(GET_POOL_POSITION_TEAM_ID, team.ID)
 		if err := row.Scan(&pool_position); err != nil {
 			return 0, err
 		}
@@ -156,9 +179,9 @@ func computePointsTeams(teams []models.Team) (int, error) {
 		if pool_position.Valid {
 			switch pool_position.Int16 {
 			case 1:
-				points += 2
+				points += firstPoolPointsInt
 			case 2:
-				points++
+				points += secondPoolPointsInt
 			}
 		}
 	}
