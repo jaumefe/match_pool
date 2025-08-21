@@ -122,3 +122,49 @@ export async function setConfiguration(config) {
         throw error
     }
 }
+
+export async function uploadFileTeams(file){
+    const token = getToken()
+    if (!token) {
+        throw new Error("User not authenticated")
+    }
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+        const response = await axios.post(`${API_URL}/register/teams`, formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        return response.data
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function uploadFileScorers(file){
+    const token = getToken()
+    if (!token) {
+        throw new Error("User not authenticated")
+    }
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+        const response = await axios.post(`${API_URL}/register/scorers`, formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        return response.data
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}

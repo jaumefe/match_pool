@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getConfiguration, getGoalsPointsPerStage, getStagesPoints, setConfiguration, submitGoalsPointsPerStage, submitStagePoints } from '../services/configuration';
+import { uploadFileScorers, uploadFileTeams, getConfiguration, getGoalsPointsPerStage, getStagesPoints, setConfiguration, submitGoalsPointsPerStage, submitStagePoints } from '../services/configuration';
 import Select from 'primevue/select';
 
 
@@ -87,6 +87,35 @@ async function updateConfiguration(config){
   }
 }
 
+const fileTeams = ref(null);
+const fileScorers = ref(null);
+
+function onTeamsFileChange(event) {
+  fileTeams.value = event.target.files[0];
+}
+
+function onScorersFileChange(event) {
+  fileScorers.value = event.target.files[0];
+}
+
+async function sendTeamsCsv() {
+  if (!fileTeams.value) return;
+  try {
+    await uploadFileTeams(fileTeams.value);
+  } catch (err) {
+    console.error("Error al enviar:", err);
+  }
+}
+
+async function sendScorersCsv(){
+  if (!fileScorers.value) return;
+  try {
+    await uploadFileScorers(fileScorers.value);
+  } catch (err) {
+    console.error("Error al enviar:", err);
+  }
+}
+
 onMounted(() => {
   loadStages(),
   loadGoalsPointsPerStage(),
@@ -96,6 +125,7 @@ onMounted(() => {
 
 <template>
     <h2>Configuració del joc</h2>
+
     <h3>Punts per fases</h3>
     <p>
         Introdueix el nom de la fase: <input v-model="formData.stage" placeholder="Nom de la fase"></input>
@@ -116,6 +146,7 @@ onMounted(() => {
         </tr>
       </tbody>
     </table>
+
     <h3>Punts per gol</h3>
     <p>
       <Select v-model="formData.stageGoal" :options="stages" optionLabel="name" optionValue="id" placeholder="Nom de la fase"></Select>
@@ -136,6 +167,7 @@ onMounted(() => {
         </tr>
       </tbody>
     </table>
+
     <h3>Configuració addicional</h3>
     <table>
       <thead>
@@ -157,6 +189,16 @@ onMounted(() => {
         </tr>
       </tbody>
     </table>
+
+    <h3>Registrar equips</h3>
+    <a href="/Teams.csv" download="template_teams.csv">Descarregar plantilla per registrar equips</a>
+    <p><input type="file" accept=".csv" @change="onTeamsFileChange" /></p>
+    <p><button @click="sendTeamsCsv" :disabled="!fileTeams">Enviar</button></p>
+
+    <h3>Registrar jugadors</h3>
+    <a href="/Scorers.csv" download="template_scorers.csv">Descarregar plantilla per registrar equips</a>
+    <p><input type="file" accept=".csv" @change="onScorersFileChange" /></p>
+    <p><button @click="sendScorersCsv" :disabled="!fileScorers">Enviar</button></p>
 </template>
 
 <style scoped>
