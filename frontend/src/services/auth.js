@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
-export const API_URL = 'http://localhost:5050'
+export const API_URL = import.meta.env.VITE_API_URL
 const TOKEN_COOKIE = 'jwt'
 const ONE_DAY = 1
 
