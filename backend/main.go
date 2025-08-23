@@ -10,16 +10,24 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jessevdk/go-flags"
+	"github.com/joho/godotenv"
 )
 
 var optsConfig struct {
-	DB   string `short:"d" long:"database" description:"Path to the database file" default:"database/template/template.db"`
-	Port string `short:"p" long:"port" description:"Port to run the server on" default:"8080"`
+	DB string `short:"d" long:"database" description:"Path to the database file" default:"database/template/template.db"`
 }
 
 func main() {
 
-	_, err := flags.ParseArgs(&optsConfig, os.Args)
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
+
+	ip := os.Getenv("ALLOWED_IP")
+	port := os.Getenv("PORT")
+
+	_, err = flags.ParseArgs(&optsConfig, os.Args)
 	if err != nil {
 		panic(err)
 	}
@@ -32,7 +40,7 @@ func main() {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins:     []string{fmt.Sprintf("http://%s", ip)},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Authorization", "Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -42,6 +50,5 @@ func main() {
 
 	routes.SetUpRoutes(r)
 
-	port := fmt.Sprintf(":%s", optsConfig.Port)
-	r.Run(port) // Start the server on the specified port
+	r.Run(fmt.Sprintf("%s:%s", ip, port)) // Start the server on the specified port
 }
