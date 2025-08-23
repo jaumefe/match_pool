@@ -26,6 +26,9 @@ func main() {
 
 	ip := os.Getenv("ALLOWED_IP")
 	port := os.Getenv("PORT")
+	ginMode := os.Getenv("GIN_MODE")
+
+	gin.SetMode(ginMode)
 
 	_, err = flags.ParseArgs(&optsConfig, os.Args)
 	if err != nil {
