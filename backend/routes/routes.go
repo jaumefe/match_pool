@@ -8,6 +8,7 @@ import (
 )
 
 func SetUpRoutes(r *gin.Engine) {
+	limitDateRepo := middleware.LimitDate{}
 	// Define your routes here
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -34,8 +35,8 @@ func SetUpRoutes(r *gin.Engine) {
 	r.POST("/users/name", middleware.JWTMiddleware(), controllers.UpdateName)
 	r.POST("/users/pass", middleware.JWTMiddleware(), controllers.UpdateUserPass)
 	r.POST("/login", controllers.LoginUser)
-	r.POST("/pool/teams", middleware.JWTMiddleware(), middleware.IsLimitDateOver(), controllers.SubmitTeamsUser)
-	r.POST("/pool/scorers", middleware.JWTMiddleware(), middleware.IsLimitDateOver(), controllers.SubmitScorersUser)
+	r.POST("/pool/teams", middleware.JWTMiddleware(), middleware.IsLimitDateOver(limitDateRepo), controllers.SubmitTeamsUser)
+	r.POST("/pool/scorers", middleware.JWTMiddleware(), middleware.IsLimitDateOver(limitDateRepo), controllers.SubmitScorersUser)
 	r.POST("/matches", middleware.JWTMiddleware(), middleware.IsAdminMiddleware(), controllers.RegisterMatch)
 	r.POST("/matches/id", middleware.JWTMiddleware(), middleware.IsAdminMiddleware(), controllers.RegisterMatchById)
 	r.POST("/goals", middleware.JWTMiddleware(), middleware.IsAdminMiddleware(), controllers.RegisterGoals)
