@@ -25,6 +25,6 @@ async function submit() {
     <p>User: <input v-model="user"></p>
     <p>Password: <input type="password" v-model="password"></p>
     <p><button @click="submit">Enter</button></p>
-    <p v-if="error" class="text-red-600">{{ error }}</p>
+    <p v-if="error" class="error">{{ error }}</p>
   </div>
 </template>

@@ -75,3 +75,8 @@ button:focus-visible {
   background-color: Canvas !important;
   color: CanvasText !important;
 }
+
+.error {
+  color: red;
+  margin-top: 5px;
+}
