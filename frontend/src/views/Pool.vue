@@ -22,7 +22,11 @@ const selectedScorerC3 = ref(null)
 const selectedScorerD1 = ref(null)
 const selectedScorerD2 = ref(null)
 const maxPoints = ref(0)
-const error = ref('')
+const error = ref({
+  teams: '',
+  scorers: '',
+  points: ''
+})
 
 // Initialize selected teams with values from getTeamByUser
 // getTeamByUser is assumed to return a promise that resolves to an object with team IDs
@@ -64,7 +68,7 @@ selectedD1.value = { value: 0 }
 selectedD2.value = { value: 0 }
 
 async function submitTeamsUser(){  
-  error.value = ''
+  error.value.teams = ''
   try {
     const teams = [
      selectedA.value?.id,
@@ -77,12 +81,12 @@ async function submitTeamsUser(){
     ]
     const result = await submitTeams(teams)
   } catch (err) {
-    error.value = 'Error assigning teams'
+    error.value.teams = 'Error assigning teams'
   }
 }
 
 async function submitScorerUser(){
-  error.value = ''
+  error.value.scorers = ''
   try {
     const scorers = [
       selectedScorerA.value?.id,
@@ -96,16 +100,16 @@ async function submitScorerUser(){
     ]
     const result = await submitScorers(scorers)
   } catch (err) {
-    error.value = "Error assigning scorers"
+    error.value.scorers = "Error assigning scorers"
   }
 }
 
 async function loadMaxPoints(){
-  error.value = ''
+  error.value.points = ''
   try {
     maxPoints.value = await getMaxPoints()
   } catch (err) {
-    error.value = 'Error loading maximum points'
+    error.value.points = 'Error loading maximum points'
     console.log(err)
   }
 }
@@ -124,6 +128,7 @@ async function loadMaxPoints(){
   </div>
   <p>TOTAL: {{ selectedA.value + selectedB1.value + selectedB2.value + selectedC1.value + selectedC2.value + selectedD1.value + selectedD2.value }}/{{ maxPoints.max_points }}</p>
   <p><button @click="submitTeamsUser">Confirmar equips</button></p>
+  <p v-if="error.teams" class="error">{{ error.teams }}</p>
   <h2>Escollir golejadors</h2>
   <div class="container">
     <div class="column"><h3>Grup A</h3><ScorerSelect v-model="selectedScorerA" :group-id="1" class="mb-4" /></div>
@@ -136,6 +141,7 @@ async function loadMaxPoints(){
     <div class="column"><h3>Grup D</h3><ScorerSelect v-model="selectedScorerD2" :group-id="4" class="mb-4" /></div>
   </div>
   <p><button @click="submitScorerUser">Confirmar jugadors</button></p>
+  <p v-if="error.scorers" class="error">{{ error.scorers }}</p>
 </template>
 
 

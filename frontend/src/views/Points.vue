@@ -10,7 +10,7 @@ onMounted(async () => {
     const data = await getPoints()
     points.value = data
   } catch (err) {
-    error.value = 'Error al cargar los datos'
+    error.value = 'Error loading points'
     console.error(err)
   }
 })
@@ -26,7 +26,7 @@ const sortedPoints = computed(() => {
 
 <template>
   <div>
-    <p v-if="error" style="color: red;">{{ error }}</p>
+    <p v-if="error" class="error">{{ error }}</p>
 
     <table v-if="sortedPoints.length">
       <thead>

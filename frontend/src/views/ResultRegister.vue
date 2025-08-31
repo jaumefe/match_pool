@@ -18,7 +18,11 @@ const formData = ref({
   goals: 0,
   position: 0
 })
-const error = ref('')
+const error = ref({
+  result: '',
+  scorer: '',
+  position: ''
+})
 
 function onInput(e) {
   const { name, value } = e.target
@@ -28,7 +32,7 @@ function onInput(e) {
 }
 
 async function submitResult(){
-  error.value = ''
+  error.value.result = ''
   try {
       await submitRegisterMatch({
           leg: 1,
@@ -40,12 +44,12 @@ async function submitResult(){
           penaltyWinnerId: PenaltyWinner.value?.id || null
       })
   } catch (err) {
-      error.value = 'Error registering match'
+      error.value.result = 'Error registering match'
   }
 }
 
 async function submitScorers(){
-  error.value = ''
+  error.value.scorer = ''
   try {
       await registerScorerMatch({
           stageId: Stage.value?.id,
@@ -55,19 +59,19 @@ async function submitScorers(){
           scorerId: Scorer.value?.id
       })
   } catch (err) {
-      error.value = 'Error registering match'
+      error.value.scorer = 'Error registering scorer'
   }
 }
 
 async function submitPosition(){
-  error.value = ''
+  error.value.position = ''
   try {
       await submitTeamPosition({
           id: Team.value?.id,
           poolPosition: formData.value.position
       })
   } catch (err) {
-      error.value = 'Error registering match'
+      error.value.position = 'Error registering pool position'
   }
 }
 
@@ -84,18 +88,21 @@ async function submitPosition(){
       <div class="column"><RegisterPenaltyWinnerSelect v-model="PenaltyWinner" :team-home="TeamHome" :team-away="TeamAway" class="mb-4"/></div>
     </div>
   <p><button @click="submitResult">Confirmar partit</button></p>
+  <p v-if="error.result" class="error">{{ error.result }}</p>
   <h2>Registrar golejadors</h2>
     <div class="container">
       <div class="column"><RegisterScorerSelect v-model="Scorer" :team-home-id="TeamHome?.id" :team-away-id="TeamAway?.id" class="mb-4" /></div>
       <div><input name="goals" :value="formData.goals" @input="onInput" placeholder="Goals"></input></div>
     </div>
   <p><button @click="submitScorers">Confirmar golejador</button></p>
+  <p v-if="error.scorer" class="error">{{ error.scorer }}</p>
   <h2>Posició fase de grups</h2>
     <div class="container">
       <div class="column"><RegisterTeamSelect v-model="Team" class="mb-4" /></div>
       <div><input name="position" :value="formData.position" @input="onInput" placeholder="Posició fase de grups"></input></div>
     </div>
     <p><button @click="submitPosition">Confirmar posició</button></p>
+    <p v-if="error.position" class="error">{{ error.position }}</p>
 </template>
 
 <style scoped>
