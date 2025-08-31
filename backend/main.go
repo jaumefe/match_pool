@@ -24,8 +24,9 @@ func main() {
 		panic(err)
 	}
 
-	ip := os.Getenv("ALLOWED_IP")
+	allowedIP := os.Getenv("ALLOWED_IP")
 	port := os.Getenv("PORT")
+	ip := os.Getenv("IP")
 	ginMode := os.Getenv("GIN_MODE")
 
 	gin.SetMode(ginMode)
@@ -43,7 +44,7 @@ func main() {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{fmt.Sprintf("http://%s", ip)},
+		AllowOrigins:     []string{fmt.Sprintf("http://%s", allowedIP)},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Authorization", "Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
