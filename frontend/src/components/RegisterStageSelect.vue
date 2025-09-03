@@ -38,12 +38,13 @@ const inner = computed({
 </script>
 
 <template>
+  <p v-if="error" class="error">{{ error }}</p>
     <Select
+        v-else
         v-model="inner"  
         :options="stages"
         optionLabel="name"
         :placeholder="stages.length === 0 ? placeHolder : (inner?.name || props.placeHolder)"
         class="w-full md:w-56"
     />
-    <p v-if="error" class="text-red-500 text-xs">{{ error }}</p>
 </template>
